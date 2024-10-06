@@ -48,6 +48,9 @@ export class FilesComponent implements OnInit {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
   ) {
+    // this.router.routeReuseStrategy.shouldReuseRoute = function () {
+    //   return false;
+    // };
     this.uploadMenuItems = [
       {
         label: 'From URL',
@@ -57,6 +60,18 @@ export class FilesComponent implements OnInit {
       }
     ];
   }
+
+  // ngAfterViewInit() {
+  //   if (this.route.firstChild) {
+  //     this.route.firstChild.params.subscribe(params => {
+  //       this.id = params['id'];
+  //       this.listFiles();
+  //       console.log(this.id);
+  //     });
+  //   } else {
+  //     this.listFiles();
+  //   }
+  // }
 
   ngOnInit(): void {
     // this.id = this.router.snapshot.params["id"]?.toString() || undefined
@@ -80,16 +95,34 @@ export class FilesComponent implements OnInit {
     //
     // this.router.
     // Accessing paramMap correctly
-    this.router.events.subscribe({
-      next: (value: any) => {
+    // if (this.route.firstChild) {
+    //   this.route.firstChild.params.subscribe(params => {
+    //     this.id = params['id'];
+    //     this.listFiles();
+    //   });
+    // } else {
+    //   this.listFiles();
+    // }
+    if (this.route.firstChild) {
+      this.route.firstChild.params.subscribe(params => {
+        this.id = params['id'];
         this.listFiles();
-        if(!(value instanceof NavigationEnd))
-          return;
+        console.log(this.id);
+      });
+    } else {
+      this.listFiles();
+    }
+    
+    // this.router.events.subscribe({
+    //   next: (value) => {
+    //     if(!(value instanceof NavigationEnd))
+    //       return;
+        
+    //     this.id = this.route.snapshot.params["id"]
+    //     this.listFiles();
 
-        this.id = this.route.snapshot.params["id"]
-
-      }
-    })
+    //   }
+    // })
   }
 
   create() {

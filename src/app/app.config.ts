@@ -13,15 +13,13 @@ import {ProfileService} from "./services/profile.service";
 import {NgxImageCompressService} from "ngx-image-compress";
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {refreshSessionInterceptor} from "./interceptor/refresh-session.interceptor";
+import { CustomReuseStrategy } from './classes/route-startegy';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptors([httpInterceptor, refreshSessionInterceptor])),
-    // provideRouter(routes, ),
-    importProvidersFrom(RouterModule.forRoot(routes, {
-      onSameUrlNavigation: "reload"
-    })),
+    provideRouter(routes),
     {
       provide: AbstractStorageService,
       useFactory: storageFactory,
@@ -36,5 +34,9 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     NgxImageCompressService,
     provideAnimations(),
+    {
+      provide: RouteReuseStrategy,
+      useClass: CustomReuseStrategy
+    }
   ]
 };
