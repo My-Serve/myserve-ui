@@ -1,0 +1,50 @@
+<div class="flex min-h-screen justify-center items-center">
+  <p-card [style]="{ width: '28vw', height: '28vw'}" class=" shadow-lg rounded-lg p-4">
+    <div class="flex flex-col h-full">
+      <!-- With Google -->
+      <div class="flex justify-center mt-3">
+        <div class="flex items-center flex-col">
+          <p>Login with your Google Account</p>
+          <p-button [outlined]="true" label="Google">
+            <i class="pe-2 fa-brands fa-google"></i>
+          </p-button>
+        </div>
+      </div>
+
+      <div class="mt-5">
+        <p-divider type="dashed" />
+      </div>
+
+      <div class="mt-5">
+        <div class="flex items-center flex-col">
+          <p>Enter your account address</p>
+          <div class="flex flex-col items-center mt-3 gap-2">
+            <div class="flex flex-col items-center">
+              <p-iconField iconPosition="right">
+                @if (this.isEmailRequesting){
+                  <p-inputIcon styleClass="pi pi-spinner pi-spin" />
+                }
+                <input pInputText id="username" aria-describedby="username-help" [(ngModel)]="emailAddress" class="flex-grow"/>
+              </p-iconField>
+              <p-button class="mt-3" (onClick)="requestOtp()" [pTooltip]="this.toolTip()" [disabled]="!valid()" rounded="rounded" [outlined]="true" severity="info" [label]="'Request OTP'" [raised]="true">
+                <i class="fa-regular fa-paper-plane pe-2"></i>
+              </p-button>
+            </div>
+            <small id="username-help">
+
+            </small>
+          </div>
+
+          @if(true){
+            <div class="flex flex-col items-center gap-2 mt-3">
+              <p-inputOtp class="" (onChange)="onEnterCode()" [(ngModel)]="code" [length]="6" id="code" />
+              <small id="code-help">
+                {{this.otpText}}
+              </small>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </p-card>
+</div>

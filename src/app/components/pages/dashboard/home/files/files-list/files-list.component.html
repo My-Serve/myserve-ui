@@ -1,0 +1,15 @@
+<ul class="list-none p-0 -mt-2">
+  <li class="flex items-center border-b p-2 font-bold">
+    <span class="material-symbols-outlined w-6 h-6"></span>
+    <span class="ml-4 ps-3 flex-1">Name</span>
+    <span class="w-16 text-center mx-10">Size</span>
+    <span class="flex-1">Owner</span>
+    <span class="material-symbols-outlined w-6 h-6 ml-2"></span>
+  </li>
+  @if(showParent()){
+    <app-parent-files-list-item></app-parent-files-list-item>
+  }
+  @for (file of files(); track $index){
+    <app-files-list-item [fileItem]="file"></app-files-list-item>
+  }
+</ul>

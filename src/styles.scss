@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import "primeng/resources/themes/aura-dark-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Signika:wght@300..700&display=swap');
+body {
+  margin: 0; /* Remove the default margin */
+}
+
+
+app-files .p-breadcrumb {
+  background: transparent !important;
+  border: 0 none;
+  border-radius: 6px;
+  padding: 0.4rem;
+}
+
+.my-text {
+  font-family: "Signika", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+@keyframes dropFile {
+  0% { transform: translateY(-50px); opacity: 0; }
+  50% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(50px); opacity: 0; }
+}
+
+.file-drop-animation {
+  animation: dropFile 2s ease-in-out infinite;
+}
+
+.fade-in-out {
+  transition: opacity 0.3s ease-in-out;
+}

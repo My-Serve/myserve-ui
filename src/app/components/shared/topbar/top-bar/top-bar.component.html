@@ -1,0 +1,22 @@
+<div class="flex items-center justify-center w-full h-14 bg-zinc-900">
+  <div class="flex">
+    <p-iconField iconPosition="left">
+      <p-inputIcon styleClass="pi pi-search" />
+      <p-autoComplete
+        dropdownIcon="pi pi-search"
+        placeholder="Search..."
+        inputStyleClass="w-[40vw] bg-zinc-800"
+        optionLabel="name">
+        <ng-template let-country pTemplate="item">
+          <div class="flex align-items-center gap-2">
+            <!--          <img-->
+            <!--            src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"-->
+            <!--            [class]="'flag flag-' + country.code.toLowerCase()"-->
+            <!--            style="width: 18px" />-->
+            <!--          <div>{{ country.name }}</div>-->
+          </div>
+        </ng-template>
+      </p-autoComplete>
+    </p-iconField>
+  </div>
+</div>

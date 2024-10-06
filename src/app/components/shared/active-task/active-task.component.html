@@ -1,0 +1,28 @@
+<div class="card flex justify-content-center">
+  <p-dialog [header]="'Active Tasks '+ (activeTaskService.active > 0 ? activeTaskService.active : '' )" (onHide)="activeTaskService.close()" [closeOnEscape]="true" closable="true" [modal]="true" [(visible)]="activeTaskService.showTasks" [style]="{ width: '50vw', height: '50vw' }">
+    @if(activeTaskService.active === 0){
+      <div class="flex w-full h-full flex-col justify-center items-center">
+        <span class="font-bold">Hmm...No active tasks!</span>
+      </div>
+    } @else {
+      <p-table [value]="Array.from(this.activeTaskService.all.values())" [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Label</th>
+            <th>Progress %</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-task>
+          <tr>
+            <td>{{ task.label }}</td>
+            <td><p-progressBar [value]="task.progress" /></td>
+            <td>{{ task.status }}</td>
+            <td></td>
+          </tr>
+        </ng-template>
+      </p-table>
+    }
+  </p-dialog>
+</div>

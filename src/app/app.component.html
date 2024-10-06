@@ -1,0 +1,12 @@
+<p-toast position="bottom-right" />
+<div class="w-screen h-screen">
+  <router-outlet/>
+  @if (spinnerService.has){
+    <div class="fixed inset-0 flex items-center justify-center bg-opacity-80 z-50">
+      <div class="flex flex-col">
+        <p-progressSpinner class="flex items-center justify-center"></p-progressSpinner>
+        <p class="flex items-center justify-center">{{spinnerService.first}}</p>
+      </div>
+    </div>
+  }
+</div>

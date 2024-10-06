@@ -1,0 +1,26 @@
+<li class="flex items-center border-b hover:bg-zinc-800 border-gray-300 p-2" (click)="this.open()">
+  @if(fileItem().type === EFileType.Directory){
+    <span class="material-symbols-outlined w-6 h-6">
+      folder
+    </span>
+  } @else if (fileItem().type === EFileType.Object){
+    <span class="material-symbols-outlined">
+      text_snippet
+    </span>
+  } @else {
+    <span class="material-symbols-outlined">
+      description
+    </span>
+  }
+  <span class="ml-4 ps-3 flex-1 my-text">{{fileItem().name}}</span>
+  @if (fileItem().type === EFileType.Object){
+    <span class="w-16 text-center mx-10">{{ fileItem().targetSize | storageSize }}</span>
+    <span class="flex-1">{{fileItem()}}</span>
+  }@else{
+    <span class="w-16 text-center mx-9"></span>
+    <span class="flex-1">{{fileItem().ownerProfile | nameParser}}</span>
+  }
+  <span class="material-symbols-outlined w-6 h-6 ml-2">
+    more_vert
+  </span>
+</li>
