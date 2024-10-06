@@ -11,7 +11,7 @@ import {IFile, IParentDirectory} from "../../../../../models/files-model";
 import {FilesService} from "../../../../../services/files.service";
 import {SpinnerService} from "../../../../../services/spinner.service";
 import {MenuItem} from "primeng/api";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {ToastService} from "../../../../../services/toast.service";
 import {EToastConstants} from "../../../../../constants/e-toast-constants";
 import {FileDropperDirective} from "../../../../../directives/file-dropper.directive";
@@ -80,11 +80,16 @@ export class FilesComponent implements OnInit {
     //
     // this.router.
     // Accessing paramMap correctly
-    this.route.paramMap.subscribe(paramMap => {
-      const id = paramMap.get('id');
-      console.log('ID from paramMap:', id);
-      this.listFiles();
-    });
+    this.router.events.subscribe({
+      next: (value: any) => {
+        this.listFiles();
+        if(!(value instanceof NavigationEnd))
+          return;
+
+        this.id = this.route.snapshot.params["id"]
+
+      }
+    })
   }
 
   create() {

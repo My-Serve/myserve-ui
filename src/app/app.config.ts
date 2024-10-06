@@ -1,5 +1,5 @@
-import {APP_INITIALIZER, ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {APP_INITIALIZER, ApplicationConfig, importProvidersFrom, provideZoneChangeDetection} from '@angular/core';
+import {provideRouter, RouteReuseStrategy, RouterModule} from '@angular/router';
 
 import { routes } from './app.routes';
 import {AbstractStorageService} from "./services/abstracts/storage/abstract.storage.service";
@@ -18,7 +18,10 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptors([httpInterceptor, refreshSessionInterceptor])),
-    provideRouter(routes),
+    // provideRouter(routes, ),
+    importProvidersFrom(RouterModule.forRoot(routes, {
+      onSameUrlNavigation: "reload"
+    })),
     {
       provide: AbstractStorageService,
       useFactory: storageFactory,
@@ -32,6 +35,6 @@ export const appConfig: ApplicationConfig = {
     },
     MessageService,
     NgxImageCompressService,
-    provideAnimations()
+    provideAnimations(),
   ]
 };

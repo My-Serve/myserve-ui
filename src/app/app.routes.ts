@@ -43,7 +43,7 @@ export const routes: Routes = [
             title: 'My Files | My Serve',
             loadComponent: () => import('./components/pages/dashboard/home/files/files.component').then(m => m.FilesComponent),
           }
-        ]
+        ],
       },
       {
         path: 'notes',
