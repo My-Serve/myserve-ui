@@ -28,7 +28,6 @@ export class ToastService {
   }
 
   public info(header: EToastConstants, message: string){
-    console.log(header)
     this.messageService.add({
       severity: 'info',
       summary: header,

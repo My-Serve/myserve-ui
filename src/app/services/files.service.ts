@@ -3,7 +3,17 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 import {IListOptions} from "../others/models/list-options";
 import {ApiRoutes} from "../others/api.routes";
-import {EFileType, ICreateFileCommand, IListFilesResponse} from "../models/files-model";
+import {
+  EFileType,
+  EPublicSignedUrlRequestType,
+  ICreateFileCommand,
+  IListFilesResponse,
+  IRequestSignedUrlCommand,
+  IRequestSignedUrlResponse
+} from "../models/files-model";
+import {extension} from "es-mime-types";
+import {ActiveTaskService} from "./active-task.service";
+import {ICreateOtpResponse} from "../models/auth.models";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +21,8 @@ import {EFileType, ICreateFileCommand, IListFilesResponse} from "../models/files
 export class FilesService {
 
   constructor(
-    private readonly http: HttpClient
+    private readonly http: HttpClient,
+    private readonly taskService: ActiveTaskService,
   ) { }
 
   list(parentId?: string, listOptions?: IListOptions): Observable<IListFilesResponse> {
@@ -19,6 +30,7 @@ export class FilesService {
     listOptions ??= {
       skip: 0,
       take: 20,
+      orderBy: 'type'
     }
 
     const params = {
@@ -30,7 +42,7 @@ export class FilesService {
     })
   }
 
-  createFolder(name: string, parentId?: string) : Observable<any> {
+  createFolder(name: string, parentId?: string) : Observable<ICreateOtpResponse> {
     return this.create({
       name: name,
       parentId: parentId,
@@ -39,12 +51,38 @@ export class FilesService {
     });
   }
 
-  requestUpload(){
-
+  createFile(name: string, parentId?: string, targetUrl?: string, targetSize: number = 0, mimeType?: string) : Observable<ICreateOtpResponse> {
+    return this.create({
+      name: name,
+      parentId: parentId,
+      type: EFileType.Object,
+      targetUrl: targetUrl,
+      targetSize: targetSize,
+      mimeType: mimeType
+    })
   }
 
-  private create(command: ICreateFileCommand) : Observable<any> {
-    return this.http.post(ApiRoutes.Files.create, command);
+  requestSignedUrl(mimeType: string, parentId?: string) : Observable<IRequestSignedUrlResponse> {
+    let randomFileName = crypto.randomUUID().replace("-", "");
+    let extensionValue = extension(mimeType)
+    if(typeof extensionValue === "undefined" || typeof extensionValue === "boolean") {
+      extensionValue = ''
+    }else{
+      extensionValue = `.${extensionValue}`;
+    }
+    randomFileName+=extensionValue;
+
+    const command : IRequestSignedUrlCommand = {
+      fileName: randomFileName,
+      parentId: parentId,
+      source: EPublicSignedUrlRequestType.Files,
+      durationInMinutes: 60
+    }
+
+    return this.http.post<IRequestSignedUrlResponse>(ApiRoutes.Files.signed, command);
   }
 
+  private create(command: ICreateFileCommand) : Observable<ICreateOtpResponse> {
+    return this.http.post<ICreateOtpResponse>(ApiRoutes.Files.create, command);
+  }
 }

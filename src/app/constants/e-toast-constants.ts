@@ -5,4 +5,5 @@ export enum EToastConstants {
   Info = 'Info',
   FormInvalid = "Form not valid",
   LoadFailed = "Loading Failed",
+  UploadSuccess = "Upload Succeeded"
 }

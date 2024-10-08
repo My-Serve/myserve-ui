@@ -31,7 +31,7 @@ export class CustomReuseStrategy implements RouteReuseStrategy {
     }
 
     shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
-        return false;
+      return false;
     }
 
     private getRouteId(route: ActivatedRouteSnapshot): string | null {

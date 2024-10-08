@@ -1,17 +1,16 @@
 import {SpinnerService} from "../../services/spinner.service";
-
 export class SpinnerLock {
 
   private readonly spinnerService: SpinnerService;
   private readonly _id: string;
-  private readonly text: string;
+  private readonly _text: string;
 
   constructor(
     text: string,
     service: SpinnerService,
   ) {
     this._id = crypto.randomUUID();
-    this.text = text;
+    this._text = text;
     this.spinnerService = service;
   }
 
@@ -23,4 +22,8 @@ export class SpinnerLock {
     return this._id;
   }
 
+
+  get text(): string {
+    return this._text;
+  }
 }

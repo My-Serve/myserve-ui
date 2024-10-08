@@ -20,7 +20,7 @@ export class StorageSizePipe implements PipeTransform {
       index++;
     }
 
-    return `${value.toFixed(2)} ${units[index]}`;
+    return `${value.toFixed(1)} ${units[index]}`;
   }
 
 }

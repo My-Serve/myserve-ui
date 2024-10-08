@@ -1,4 +1,4 @@
-import {Component, input, OnInit} from '@angular/core';
+import {Component, input, OnInit, output} from '@angular/core';
 import {FilesListItemComponent} from "../../../../../shared/files/files-list-item/files-list-item.component";
 import {
   ParentFilesListItemComponent
@@ -20,6 +20,7 @@ import {IFile} from "../../../../../../models/files-model";
 export class FilesListComponent implements OnInit {
   showParent = input.required<boolean>();
   files = input.required<IFile[]>();
+  gotoPrevious = output();
 
   constructor(
     private readonly fileService: FilesService,
@@ -31,4 +32,7 @@ export class FilesListComponent implements OnInit {
 
   }
 
+  onGotoPrevious(): void {
+    this.gotoPrevious.emit();
+  }
 }

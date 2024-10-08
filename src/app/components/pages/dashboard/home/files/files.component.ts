@@ -11,10 +11,15 @@ import {IFile, IParentDirectory} from "../../../../../models/files-model";
 import {FilesService} from "../../../../../services/files.service";
 import {SpinnerService} from "../../../../../services/spinner.service";
 import {MenuItem} from "primeng/api";
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ToastService} from "../../../../../services/toast.service";
 import {EToastConstants} from "../../../../../constants/e-toast-constants";
 import {FileDropperDirective} from "../../../../../directives/file-dropper.directive";
+import {UploadService} from "../../../../../services/upload.service";
+import {ActiveTaskService} from "../../../../../services/active-task.service";
+import {TaskLabel} from "../../../../../constants/e-task-label";
+import {removeQueryParams} from "../../../../../utils/string.utils";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'app-files',
@@ -47,10 +52,9 @@ export class FilesComponent implements OnInit {
     private readonly toastService: ToastService,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly uploadService: UploadService,
+    private readonly taskService: ActiveTaskService
   ) {
-    // this.router.routeReuseStrategy.shouldReuseRoute = function () {
-    //   return false;
-    // };
     this.uploadMenuItems = [
       {
         label: 'From URL',
@@ -61,68 +65,16 @@ export class FilesComponent implements OnInit {
     ];
   }
 
-  // ngAfterViewInit() {
-  //   if (this.route.firstChild) {
-  //     this.route.firstChild.params.subscribe(params => {
-  //       this.id = params['id'];
-  //       this.listFiles();
-  //       console.log(this.id);
-  //     });
-  //   } else {
-  //     this.listFiles();
-  //   }
-  // }
 
   ngOnInit(): void {
-    // this.id = this.router.snapshot.params["id"]?.toString() || undefined
-    // this.router.params.subscribe(params => {
-    //   this.id = params['id'];
-    //   console.log(this.id); // Should log the ID correctly
-    //   this.listFiles();
-    // });
-    //
-    // this.router.params.subscribe({
-    //   next: value => {
-    //     console.log(value)
-    //   },
-    //   error: err => {
-    //     console.error(err)
-    //   },
-    //   complete: () => {
-    //     console.log('com')
-    //   }
-    // })
-    //
-    // this.router.
-    // Accessing paramMap correctly
-    // if (this.route.firstChild) {
-    //   this.route.firstChild.params.subscribe(params => {
-    //     this.id = params['id'];
-    //     this.listFiles();
-    //   });
-    // } else {
-    //   this.listFiles();
-    // }
     if (this.route.firstChild) {
       this.route.firstChild.params.subscribe(params => {
         this.id = params['id'];
         this.listFiles();
-        console.log(this.id);
       });
     } else {
       this.listFiles();
     }
-    
-    // this.router.events.subscribe({
-    //   next: (value) => {
-    //     if(!(value instanceof NavigationEnd))
-    //       return;
-        
-    //     this.id = this.route.snapshot.params["id"]
-    //     this.listFiles();
-
-    //   }
-    // })
   }
 
   create() {
@@ -152,7 +104,90 @@ export class FilesComponent implements OnInit {
     })
   }
 
-  onFileDropped($event: FileList) {
-    console.log($event)
+  onFileDropped(event: FileList) {
+    for (let i = 0; i < event.length; i++) {
+      this.createUpload(event[i]);
+    }
+  }
+
+  async createUpload(file: File): Promise<void> {
+    const fileUploadLock = this.spinnerService.create("Preparing Upload")
+    this.fileService.requestSignedUrl(file.type, this.parentId).subscribe({
+      next: value => {
+        fileUploadLock.release();
+
+        if(!value.success){
+          this.toastService.error(EToastConstants.Error, value.message || 'An unknown error occurred while authorizing file upload.');
+          return;
+        }
+
+        const accessUrl = value.accessUrl;
+        const task = this.taskService.createTask(TaskLabel.fileUpload(file.name));
+        task.act(async (task) => {
+          this.uploadService.upload(accessUrl, file.type, file).subscribe({
+            next: value => {
+              task.setProgress(value);
+              if(value >= 100 && !task.completed)
+              {
+                task.complete();
+                const meParentId = this.parentId;
+                this.fileService.createFile(file.name, this.parentId, removeQueryParams(accessUrl), file.size, file.type)
+                  .subscribe({
+                    next: (value) => {
+                      this.toastService.success(EToastConstants.UploadSuccess, `${file.name} has been uploaded successfully.`);
+                      if(meParentId === this.parentId){
+                        this.listFiles();
+                      }
+                    },
+                    error: err => {
+                      if(err instanceof HttpErrorResponse){
+                        if(err.status === 409)
+                        {
+                          this.toastService.error(EToastConstants.Error, 'A file/directory with this name already exists!')
+                          return;
+                        }
+                      }
+
+                      this.toastService.error(EToastConstants.Error, err?.message || `An unknown error occurred while uploading ${file.name}`);
+
+                    }
+                  })
+              }
+            },
+            error: err => {
+              this.toastService.error(EToastConstants.Error, `Failed to upload ${file.name}`);
+              task.setError('Error while uploading!')
+            }
+          })
+        })
+      },
+      error: err => {
+        fileUploadLock.release();
+        this.toastService.error(EToastConstants.Error, 'An unknown error occurred while authorizing file upload.');
+        return;
+      }
+    })
+  }
+
+
+
+  onGotoPrevious() {
+    if(this.parents.length <= 0)
+      return;
+
+    if(this.parents.length === 1)
+    {
+      this.router.navigate(['home', 'files'])
+      return;
+    }
+
+    this.router.navigate(['home', 'files', 'dir', this.parents.at(-2)!.id])
+  }
+
+  public get parentId() : string | undefined {
+    if(this.parents.length <= 0)
+      return undefined;
+
+    return this.parents.at(-1)!.id
   }
 }

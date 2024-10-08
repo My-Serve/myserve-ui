@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {Task} from "../others/models/task";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -27,7 +28,8 @@ export class ActiveTaskService {
     const task = new Task(label);
     task.onFinished = (status) => {
       this.runningTasks.delete(task.id);
-      this.failedTasks.set(task.id, task);
+      if(!this.status)
+        this.failedTasks.set(task.id, task);
     }
     this.runningTasks.set(task.id, task);
     return task;

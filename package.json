@@ -20,6 +20,7 @@
     "@angular/router": "^18.2.0",
     "@fortawesome/angular-fontawesome": "^0.15.0",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
+    "es-mime-types": "^0.1.4",
     "ngx-image-compress": "^18.1.5",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.11",

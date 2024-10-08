@@ -3,6 +3,7 @@ import {ActiveTaskService} from "../../../services/active-task.service";
 import {DialogModule} from "primeng/dialog";
 import {TableModule} from "primeng/table";
 import {ProgressBarModule} from "primeng/progressbar";
+import {Task} from "../../../others/models/task";
 
 @Component({
   selector: 'app-active-task',
@@ -17,14 +18,18 @@ import {ProgressBarModule} from "primeng/progressbar";
 })
 export class ActiveTaskComponent implements OnInit{
 
+  tasks: Task[] = []
+
   constructor(
     protected readonly activeTaskService: ActiveTaskService,
   ) {
   }
 
   ngOnInit(): void {
-
   }
 
-  protected readonly Array = Array;
+
+  openDialog() {
+    this.tasks = this.activeTaskService.all;
+  }
 }

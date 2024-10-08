@@ -12,9 +12,9 @@ import {StorageSizePipe} from "../../../../pipes/storage-size.pipe";
 })
 export class ParentFilesListItemComponent {
 
-  onClick = output();
+  gotoPrevious = output();
 
   clickOnParent(){
-    this.onClick.emit();
+    this.gotoPrevious.emit();
   }
 }

@@ -112,6 +112,7 @@ export interface ITask {
   setError(reason: string): Task
   complete(): Task
   setProgress(progress: number) : Task
+  completed: boolean
   abortSignal: AbortController
 }
 

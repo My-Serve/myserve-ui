@@ -13,7 +13,7 @@ import {ProfileService} from "./services/profile.service";
 import {NgxImageCompressService} from "ngx-image-compress";
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {refreshSessionInterceptor} from "./interceptor/refresh-session.interceptor";
-import { CustomReuseStrategy } from './classes/route-startegy';
+import { CustomReuseStrategy } from './strategy/route-strategy';
 
 export const appConfig: ApplicationConfig = {
   providers: [

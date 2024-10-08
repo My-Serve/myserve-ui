@@ -25,7 +25,8 @@ export class SpinnerService {
   }
 
   public get first(): SpinnerLock | undefined {
-    return Object.keys(this.spinnerMap).length > 0 ? this.spinnerMap[-1] : undefined;
+    const keys = Object.keys(this.spinnerMap);
+    return keys.length > 0 ? this.spinnerMap[keys.at(-1)!] : undefined;
   }
 
   public get has() : boolean {

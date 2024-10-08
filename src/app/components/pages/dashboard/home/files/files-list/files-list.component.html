@@ -7,7 +7,7 @@
     <span class="material-symbols-outlined w-6 h-6 ml-2"></span>
   </li>
   @if(showParent()){
-    <app-parent-files-list-item></app-parent-files-list-item>
+    <app-parent-files-list-item (gotoPrevious)="onGotoPrevious()" ></app-parent-files-list-item>
   }
   @for (file of files(); track $index){
     <app-files-list-item [fileItem]="file"></app-files-list-item>

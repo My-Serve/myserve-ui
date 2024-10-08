@@ -33,7 +33,31 @@ export interface ICreateFileCommand {
   mimeType?: string
 }
 
+export interface ICreateFileResponse {
+  file?: IFile;
+  message?: string;
+}
+
 export interface IListFilesResponse {
   files: IFile[]
   parents: IParentDirectory[]
+}
+
+export interface IRequestSignedUrlCommand {
+  fileName: string,
+  source: EPublicSignedUrlRequestType,
+  durationInMinutes: number,
+  parentId?: string
+}
+
+export interface IRequestSignedUrlResponse {
+  success: boolean,
+  message?: string,
+  accessUrl: string
+}
+
+export enum EPublicSignedUrlRequestType {
+  Profile = "Profile",
+  Files = "Files",
+  PublicFile = "PublicFile",
 }

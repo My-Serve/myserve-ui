@@ -17,5 +17,6 @@ export class ApiRoutes {
   public static Files = {
     list: `${ApiRoutes.base}/files`,
     create: `${ApiRoutes.base}/files`,
+    signed: `${ApiRoutes.base}/files/signed`,
   }
 }
