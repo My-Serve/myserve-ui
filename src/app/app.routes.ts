@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import {authGuard} from "./guard/auth.guard";
-import {profileGuard} from "./guard/profile.guard";
+import {authGuard} from "@guard/auth.guard";
+import {profileGuard} from "@guard/profile.guard";
 
 export const routes: Routes = [
   {
@@ -39,10 +39,15 @@ export const routes: Routes = [
         loadComponent: () => import('./components/pages/dashboard/home/files/files.component').then(m => m.FilesComponent),
         children: [
           {
+            path: 'obj/:id',
+            title: 'View | My Serve',
+            loadComponent: () => import('./components/pages/dashboard/home/files/file-item/file-item.component').then(m => m.FileItemComponent),
+          },
+          {
             path: 'dir/:id',
             title: 'My Files | My Serve',
             loadComponent: () => import('./components/pages/dashboard/home/files/files.component').then(m => m.FilesComponent),
-          }
+          },
         ],
       },
       {
@@ -61,6 +66,11 @@ export const routes: Routes = [
         pathMatch: 'full',
       }
     ]
+  },
+  {
+    path: 'not-found',
+    title: 'Not Found | My Serve',
+    loadComponent: () => import('./components/shared/not-found/not-found.component').then(m => m.NotFoundComponent),
   },
   {
     path: '',

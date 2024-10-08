@@ -7,7 +7,7 @@ import {
   IRefreshTokenResponse,
   IValidateOtpCommand,
   IValidateOtpResponse
-} from "../models/auth.models";
+} from "@models/auth.models";
 import {catchError, from, map, Observable, of, switchMap, tap} from "rxjs";
 import {AbstractStorageService} from "./abstracts/storage/abstract.storage.service";
 import {StorageKeys} from "../others/storage/storage.keys";

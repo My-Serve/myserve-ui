@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import {IUserIdentification} from "../models/profile-model";
+import {IUserIdentification} from "@models/profile-model";
 
 @Pipe({
   name: 'nameParser',

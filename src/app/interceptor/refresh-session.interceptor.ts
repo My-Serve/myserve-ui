@@ -1,7 +1,7 @@
 import {HttpErrorResponse, HttpInterceptorFn, HttpRequest} from '@angular/common/http';
-import {environment} from "../../environments/environment";
+import {environment} from "@env/environment";
 import {BehaviorSubject, catchError, filter, from, map, of, switchMap, take, throwError} from "rxjs";
-import {AuthService} from "../services/auth.service";
+import {AuthService} from "@services/auth.service";
 import {inject} from "@angular/core";
 
 let isRefreshing: boolean = false;

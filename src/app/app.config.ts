@@ -2,17 +2,17 @@ import {APP_INITIALIZER, ApplicationConfig, importProvidersFrom, provideZoneChan
 import {provideRouter, RouteReuseStrategy, RouterModule} from '@angular/router';
 
 import { routes } from './app.routes';
-import {AbstractStorageService} from "./services/abstracts/storage/abstract.storage.service";
-import {storageFactory} from "./factory/abstract-provider-factory";
+import {AbstractStorageService} from "@services/abstracts/storage/abstract.storage.service";
+import {storageFactory} from "@factory/abstract-provider-factory";
 import {provideHttpClient, withInterceptors, withInterceptorsFromDi} from "@angular/common/http";
 import {MessageService} from "primeng/api";
-import {initialize} from "./factory/initializer";
-import {AuthService} from "./services/auth.service";
-import {httpInterceptor} from "./interceptor/http.interceptor";
-import {ProfileService} from "./services/profile.service";
+import {initialize} from "@factory/initializer";
+import {AuthService} from "@services/auth.service";
+import {httpInterceptor} from "@interceptor/http.interceptor";
+import {ProfileService} from "@services/profile.service";
 import {NgxImageCompressService} from "ngx-image-compress";
 import {provideAnimations} from "@angular/platform-browser/animations";
-import {refreshSessionInterceptor} from "./interceptor/refresh-session.interceptor";
+import {refreshSessionInterceptor} from "@interceptor/refresh-session.interceptor";
 import { CustomReuseStrategy } from './strategy/route-strategy';
 
 export const appConfig: ApplicationConfig = {
@@ -34,9 +34,9 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     NgxImageCompressService,
     provideAnimations(),
-    {
-      provide: RouteReuseStrategy,
-      useClass: CustomReuseStrategy
-    }
+    // {
+    //   provide: RouteReuseStrategy,
+    //   useClass: CustomReuseStrategy
+    // }
   ]
 };

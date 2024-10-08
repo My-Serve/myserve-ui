@@ -4,9 +4,36 @@
       folder
     </span>
   } @else if (fileItem().type === EFileType.Object){
-    <span class="material-symbols-outlined">
-      text_snippet
-    </span>
+    @if(this.contentType === EContentType.Audio){
+      <span class="material-symbols-outlined">
+        music_note
+      </span>
+    } @else if (this.contentType === EContentType.Text){
+      <span class="material-symbols-outlined">
+        text_snippet
+      </span>
+    } @else if (this.contentType === EContentType.Video){
+      <span class="material-symbols-outlined">
+        movie
+      </span>
+    } @else if (this.contentType === EContentType.Sheet){
+      <span class="material-symbols-outlined">
+        data_table
+      </span>
+    } @else if (this.contentType === EContentType.Pdf){
+      <span class="material-symbols-outlined">
+        picture_as_pdf
+      </span>
+    } @else if (this.contentType === EContentType.Image){
+      <span class="material-symbols-outlined">
+        image
+      </span>
+    } @else {
+      <span class="material-symbols-outlined">
+        data_object
+      </span>
+    }
+
   } @else {
     <span class="material-symbols-outlined">
       description

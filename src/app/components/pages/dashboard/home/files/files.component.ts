@@ -1,25 +1,26 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ToolbarModule} from "primeng/toolbar";
 import {SplitButtonModule} from "primeng/splitbutton";
 import {InputTextModule} from "primeng/inputtext";
 import {DividerModule} from "primeng/divider";
 import {BreadcrumbModule} from "primeng/breadcrumb";
 import {NgStyle} from "@angular/common";
-import {FilesListItemComponent} from "../../../../shared/files/files-list-item/files-list-item.component";
+import {FilesListItemComponent} from "@shared/files/files-list-item/files-list-item.component";
 import {FilesListComponent} from "./files-list/files-list.component";
-import {IFile, IParentDirectory} from "../../../../../models/files-model";
-import {FilesService} from "../../../../../services/files.service";
-import {SpinnerService} from "../../../../../services/spinner.service";
+import {IFile, IParentDirectory} from "@models/files-model";
+import {FilesService} from "@services/files.service";
+import {SpinnerService} from "@services/spinner.service";
 import {MenuItem} from "primeng/api";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ToastService} from "../../../../../services/toast.service";
-import {EToastConstants} from "../../../../../constants/e-toast-constants";
-import {FileDropperDirective} from "../../../../../directives/file-dropper.directive";
-import {UploadService} from "../../../../../services/upload.service";
-import {ActiveTaskService} from "../../../../../services/active-task.service";
-import {TaskLabel} from "../../../../../constants/e-task-label";
-import {removeQueryParams} from "../../../../../utils/string.utils";
+import {ToastService} from "@services/toast.service";
+import {EToastConstants} from "@constants/e-toast-constants";
+import {FileDropperDirective} from "@directives/file-dropper.directive";
+import {UploadService} from "@services/upload.service";
+import {ActiveTaskService} from "@services/active-task.service";
+import {TaskLabel} from "@constants/e-task-label";
+import {removeQueryParams} from "@utils/string.utils";
 import {HttpErrorResponse} from "@angular/common/http";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-files',
@@ -38,13 +39,13 @@ import {HttpErrorResponse} from "@angular/common/http";
   templateUrl: './files.component.html',
   styleUrls: ['./files.component.scss']
 })
-export class FilesComponent implements OnInit {
+export class FilesComponent implements OnInit, OnDestroy {
 
   id?: string;
   parents: IParentDirectory[] = []
   files: IFile[] = []
   readonly uploadMenuItems: MenuItem[]
-
+  private _subscription?: Subscription;
 
   constructor(
     private readonly fileService: FilesService,
@@ -53,7 +54,7 @@ export class FilesComponent implements OnInit {
     private readonly router: Router,
     private readonly route: ActivatedRoute,
     private readonly uploadService: UploadService,
-    private readonly taskService: ActiveTaskService
+    private readonly taskService: ActiveTaskService,
   ) {
     this.uploadMenuItems = [
       {
@@ -65,10 +66,16 @@ export class FilesComponent implements OnInit {
     ];
   }
 
+  ngOnDestroy(): void {
+    if(this.subscription){
+      this._subscription?.unsubscribe();
+    }
+  }
+
 
   ngOnInit(): void {
     if (this.route.firstChild) {
-      this.route.firstChild.params.subscribe(params => {
+      this.subscription = this.route.firstChild.params.subscribe(params => {
         this.id = params['id'];
         this.listFiles();
       });
@@ -189,5 +196,18 @@ export class FilesComponent implements OnInit {
       return undefined;
 
     return this.parents.at(-1)!.id
+  }
+
+
+  get subscription(): Subscription | undefined {
+    return this._subscription;
+  }
+
+  set subscription(value: Subscription) {
+    if(this._subscription){
+      this._subscription.unsubscribe();
+    }
+
+    this._subscription = value;
   }
 }

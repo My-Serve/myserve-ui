@@ -1,5 +1,5 @@
 import {Component, output} from '@angular/core';
-import {StorageSizePipe} from "../../../../pipes/storage-size.pipe";
+import {StorageSizePipe} from "@pipes/storage-size.pipe";
 
 @Component({
   selector: 'app-parent-files-list-item',

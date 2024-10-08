@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {MessageService} from "primeng/api";
-import {EToastConstants} from "../constants/e-toast-constants";
+import {EToastConstants} from "@constants/e-toast-constants";
 
 @Injectable({
   providedIn: 'root'

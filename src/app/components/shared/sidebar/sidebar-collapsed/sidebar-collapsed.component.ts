@@ -1,9 +1,9 @@
 import {Component, input, OnInit} from '@angular/core';
-import {ProfileService} from "../../../../services/profile.service";
+import {ProfileService} from "@services/profile.service";
 import {NgClass, NgOptimizedImage} from "@angular/common";
 import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {TooltipModule} from "primeng/tooltip";
-import {ActiveTaskService} from "../../../../services/active-task.service";
+import {ActiveTaskService} from "@services/active-task.service";
 import {BadgeModule} from "primeng/badge";
 import {ActiveTaskComponent} from "../../active-task/active-task.component";
 

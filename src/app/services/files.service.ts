@@ -1,19 +1,18 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {IListOptions} from "../others/models/list-options";
-import {ApiRoutes} from "../others/api.routes";
+import {IListOptions} from "@others/models/list-options";
+import {ApiRoutes} from "@others/api.routes";
 import {
   EFileType,
   EPublicSignedUrlRequestType,
-  ICreateFileCommand,
+  ICreateFileCommand, ICreateFileResponse, IGetFileByIdResponse,
   IListFilesResponse,
   IRequestSignedUrlCommand,
   IRequestSignedUrlResponse
-} from "../models/files-model";
+} from "@models/files-model";
 import {extension} from "es-mime-types";
 import {ActiveTaskService} from "./active-task.service";
-import {ICreateOtpResponse} from "../models/auth.models";
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +41,11 @@ export class FilesService {
     })
   }
 
-  createFolder(name: string, parentId?: string) : Observable<ICreateOtpResponse> {
+  id(id: string) : Observable<IGetFileByIdResponse> {
+    return this.http.get<IGetFileByIdResponse>(`${ApiRoutes.Files.id}/{id}`);
+  }
+
+  createFolder(name: string, parentId?: string) : Observable<ICreateFileResponse> {
     return this.create({
       name: name,
       parentId: parentId,
@@ -51,7 +54,7 @@ export class FilesService {
     });
   }
 
-  createFile(name: string, parentId?: string, targetUrl?: string, targetSize: number = 0, mimeType?: string) : Observable<ICreateOtpResponse> {
+  createFile(name: string, parentId?: string, targetUrl?: string, targetSize: number = 0, mimeType?: string) : Observable<ICreateFileResponse> {
     return this.create({
       name: name,
       parentId: parentId,
@@ -82,7 +85,7 @@ export class FilesService {
     return this.http.post<IRequestSignedUrlResponse>(ApiRoutes.Files.signed, command);
   }
 
-  private create(command: ICreateFileCommand) : Observable<ICreateOtpResponse> {
-    return this.http.post<ICreateOtpResponse>(ApiRoutes.Files.create, command);
+  private create(command: ICreateFileCommand) : Observable<ICreateFileResponse> {
+    return this.http.post<ICreateFileResponse>(ApiRoutes.Files.create, command);
   }
 }

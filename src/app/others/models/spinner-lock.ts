@@ -1,4 +1,4 @@
-import {SpinnerService} from "../../services/spinner.service";
+import {SpinnerService} from "@services/spinner.service";
 export class SpinnerLock {
 
   private readonly spinnerService: SpinnerService;

@@ -5,12 +5,12 @@ import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/
 import {AvatarModule} from "primeng/avatar";
 import {TooltipModule} from "primeng/tooltip";
 import {Button} from "primeng/button";
-import {generateRandomAlphanumeric} from "../../../../utils/string.utils";
+import {generateRandomAlphanumeric} from "@utils/string.utils";
 import {Router} from "@angular/router";
-import {ProfileService} from "../../../../services/profile.service";
-import {ToastService} from "../../../../services/toast.service";
-import {EToastConstants} from "../../../../constants/e-toast-constants";
-import {IProfileCreateCommand} from "../../../../models/profile-model";
+import {ProfileService} from "@services/profile.service";
+import {ToastService} from "@services/toast.service";
+import {EToastConstants} from "@constants/e-toast-constants";
+import {IProfileCreateCommand} from "@models/profile-model";
 
 @Component({
   selector: 'app-profile',

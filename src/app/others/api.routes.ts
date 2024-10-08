@@ -1,4 +1,4 @@
-import {environment} from "../../environments/environment";
+import {environment} from "@env/environment";
 
 export class ApiRoutes {
 
@@ -16,6 +16,7 @@ export class ApiRoutes {
 
   public static Files = {
     list: `${ApiRoutes.base}/files`,
+    id: `${ApiRoutes.base}/files`,
     create: `${ApiRoutes.base}/files`,
     signed: `${ApiRoutes.base}/files/signed`,
   }

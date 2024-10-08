@@ -4,19 +4,20 @@ import {Button} from "primeng/button";
 import {FaIconComponent} from "@fortawesome/angular-fontawesome";
 import {DividerModule} from "primeng/divider";
 import {InputTextModule} from "primeng/inputtext";
-import {AuthService} from "../../../../services/auth.service";
+import {AuthService} from "@services/auth.service";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {AbstractStorageService} from "../../../../services/abstracts/storage/abstract.storage.service";
-import {StorageKeys} from "../../../../others/storage/storage.keys";
+import {AbstractStorageService} from "@services/abstracts/storage/abstract.storage.service";
+import {StorageKeys} from "@others/storage/storage.keys";
 import {InputOtpModule} from "primeng/inputotp";
 import {TooltipModule} from "primeng/tooltip";
-import {UtilityService} from "../../../../services/utility.service";
+import {UtilityService} from "@services/utility.service";
 import {IconFieldModule} from "primeng/iconfield";
 import {InputIconModule} from "primeng/inputicon";
-import {ToastService} from "../../../../services/toast.service";
-import {EToastConstants} from "../../../../constants/e-toast-constants";
-import {ProfileService} from "../../../../services/profile.service";
+import {ToastService} from "@services/toast.service";
+import {EToastConstants} from "@constants/e-toast-constants";
+import {ProfileService} from "@services/profile.service";
 import {Router} from "@angular/router";
+import {SpinnerService} from "@services/spinner.service";
 
 @Component({
   selector: 'app-sign-in',
@@ -55,7 +56,8 @@ export class SignInComponent implements OnInit, OnDestroy {
     private readonly utilityService: UtilityService,
     private readonly toastService: ToastService,
     private readonly profileService: ProfileService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly spinnerService: SpinnerService
   ) {
     this.interval = setInterval(() => {
       this.otpText = this.smallHelpText();
@@ -123,10 +125,9 @@ export class SignInComponent implements OnInit, OnDestroy {
       }
     }
 
-    if(this.loading)
-      return false;
+    return !this.loading;
 
-    return true;
+
   }
 
   toolTip() : string | undefined {
@@ -181,11 +182,13 @@ export class SignInComponent implements OnInit, OnDestroy {
 
     this.loading = true;
 
+    const spinnerLock = this.spinnerService.create("Is it you?");
     this.authService.validateOtp({
       email: this.emailAddress!,
       code: this.code,
     }).subscribe({
       next: value => {
+        spinnerLock.release();
         this.loading = false;
         if(!value){
           this.toastService.error(EToastConstants.Error, 'Failed to validate your OTP')
@@ -207,11 +210,14 @@ export class SignInComponent implements OnInit, OnDestroy {
             }
           },
           error: (error) => {
-            console.error(error)
+            this.loading = false;
+            spinnerLock.release();
+            this.toastService.error(EToastConstants.Error, 'An unknown error happened while validating your otp')
           }
         })
       },
       error: err => {
+        spinnerLock.release();
         this.loading = false;
         console.error(err)
       }

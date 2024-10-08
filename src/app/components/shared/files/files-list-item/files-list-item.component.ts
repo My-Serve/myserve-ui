@@ -1,10 +1,12 @@
-import {Component, input, output} from '@angular/core';
+import {Component, input, OnInit} from '@angular/core';
 import {DividerModule} from "primeng/divider";
-import {EFileType, IFile} from "../../../../models/files-model";
-import {StorageSizePipe} from "../../../../pipes/storage-size.pipe";
-import {NameParserPipe} from "../../../../pipes/name-parser.pipe";
+import {EFileType, IFile} from "@models/files-model";
+import {StorageSizePipe} from "@pipes/storage-size.pipe";
+import {NameParserPipe} from "@pipes/name-parser.pipe";
 import {Router} from "@angular/router";
 import {Button} from "primeng/button";
+import {DataService} from "@services/data.service";
+import {EContentType} from "@constants/e-content-type";
 
 @Component({
   selector: 'app-files-list-item',
@@ -18,15 +20,20 @@ import {Button} from "primeng/button";
   templateUrl: './files-list-item.component.html',
   styles: ``
 })
-export class FilesListItemComponent {
+export class FilesListItemComponent implements OnInit{
 
   fileItem = input.required<IFile>();
-
+  protected contentType: EContentType = EContentType.Unknown;
 
   protected readonly EFileType = EFileType;
   constructor(
     protected readonly route: Router,
+    protected readonly dataService: DataService
   ) {
+  }
+
+  ngOnInit(): void {
+    this.contentType = this.dataService.typeByMime(this.fileItem().mimeType);
   }
 
   open() {
@@ -38,4 +45,6 @@ export class FilesListItemComponent {
 
 
   }
+
+  protected readonly EContentType = EContentType;
 }

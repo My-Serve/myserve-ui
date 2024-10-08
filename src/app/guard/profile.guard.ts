@@ -1,6 +1,6 @@
 import {CanActivateFn, Router} from '@angular/router';
 import {inject} from "@angular/core";
-import {ProfileService} from "../services/profile.service";
+import {ProfileService} from "@services/profile.service";
 
 export const profileGuard: CanActivateFn = async (route, state) => {
   const profileService = inject(ProfileService);

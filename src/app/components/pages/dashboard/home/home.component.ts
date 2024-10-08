@@ -1,9 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {SidebarComponent} from "../../../shared/sidebar/sidebar.component";
+import {SidebarComponent} from "@shared/sidebar/sidebar.component";
 import {RouterOutlet} from "@angular/router";
-import {AutoCompleteCompleteEvent} from "primeng/autocomplete";
-import {TopBarComponent} from "../../../shared/topbar/top-bar/top-bar.component";
-import {ActiveTaskService} from "../../../../services/active-task.service";
+import {TopBarComponent} from "@shared/topbar/top-bar/top-bar.component";
 
 @Component({
   selector: 'app-home',

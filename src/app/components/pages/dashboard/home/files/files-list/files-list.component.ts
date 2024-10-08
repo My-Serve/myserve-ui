@@ -1,11 +1,11 @@
 import {Component, input, OnInit, output} from '@angular/core';
-import {FilesListItemComponent} from "../../../../../shared/files/files-list-item/files-list-item.component";
+import {FilesListItemComponent} from "@shared/files/files-list-item/files-list-item.component";
 import {
   ParentFilesListItemComponent
-} from "../../../../../shared/files/parent-files-list-item/parent-files-list-item.component";
-import {FilesService} from "../../../../../../services/files.service";
-import {SpinnerService} from "../../../../../../services/spinner.service";
-import {IFile} from "../../../../../../models/files-model";
+} from "@shared/files/parent-files-list-item/parent-files-list-item.component";
+import {FilesService} from "@services/files.service";
+import {SpinnerService} from "@services/spinner.service";
+import {IFile} from "@models/files-model";
 
 @Component({
   selector: 'app-files-list',

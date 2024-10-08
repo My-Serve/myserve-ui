@@ -56,6 +56,11 @@ export interface IRequestSignedUrlResponse {
   accessUrl: string
 }
 
+export interface IGetFileByIdResponse {
+  file: IFile;
+  expiry: Date
+}
+
 export enum EPublicSignedUrlRequestType {
   Profile = "Profile",
   Files = "Files",

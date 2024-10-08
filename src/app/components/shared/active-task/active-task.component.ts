@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {ActiveTaskService} from "../../../services/active-task.service";
+import {ActiveTaskService} from "@services/active-task.service";
 import {DialogModule} from "primeng/dialog";
 import {TableModule} from "primeng/table";
 import {ProgressBarModule} from "primeng/progressbar";
-import {Task} from "../../../others/models/task";
+import {Task} from "@others/models/task";
 
 @Component({
   selector: 'app-active-task',

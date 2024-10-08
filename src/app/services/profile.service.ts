@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {BehaviorSubject, catchError, from, Observable, of, switchMap, tap, throwError} from "rxjs";
-import {IProfileCreateCommand, IProfileCreateResponse, IProfileModel} from "../models/profile-model";
+import {IProfileCreateCommand, IProfileCreateResponse, IProfileModel} from "@models/profile-model";
 import {AuthService} from "./auth.service";
 import {ApiRoutes} from "../others/api.routes";
-import {compressImage} from "../utils/image-compression.utils";
+import {compressImage} from "@utils/image-compression.utils";
 import {NgxImageCompressService} from "ngx-image-compress";
 
 @Injectable({
