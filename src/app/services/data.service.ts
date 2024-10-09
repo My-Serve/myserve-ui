@@ -26,6 +26,12 @@ export class DataService {
 
   private initFileType(){
     this.fileType["image/jpeg"] = EContentType.Image;
+    this.fileType["image/png"] = EContentType.Image;
+
+    this.fileType["video/mp4"] = EContentType.Video;
+
+    this.fileType["audio/mpeg"] = EContentType.Audio;
+
     this.fileType["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"] = EContentType.Sheet;
   }
 }

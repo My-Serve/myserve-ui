@@ -7,7 +7,7 @@ import {BreadcrumbModule} from "primeng/breadcrumb";
 import {NgStyle} from "@angular/common";
 import {FilesListItemComponent} from "@shared/files/files-list-item/files-list-item.component";
 import {FilesListComponent} from "./files-list/files-list.component";
-import {IFile, IParentDirectory} from "@models/files-model";
+import {EFileType, IFile, IParentDirectory} from "@models/files-model";
 import {FilesService} from "@services/files.service";
 import {SpinnerService} from "@services/spinner.service";
 import {MenuItem} from "primeng/api";
@@ -21,6 +21,8 @@ import {TaskLabel} from "@constants/e-task-label";
 import {removeQueryParams} from "@utils/string.utils";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Subscription} from "rxjs";
+import {DialogModule} from "primeng/dialog";
+import {FileItemComponent} from "@pages/dashboard/home/files/file-item/file-item.component";
 
 @Component({
   selector: 'app-files',
@@ -35,6 +37,8 @@ import {Subscription} from "rxjs";
     FilesListItemComponent,
     FilesListComponent,
     FileDropperDirective,
+    DialogModule,
+    FileItemComponent,
   ],
   templateUrl: './files.component.html',
   styleUrls: ['./files.component.scss']
@@ -48,7 +52,7 @@ export class FilesComponent implements OnInit, OnDestroy {
   private _subscription?: Subscription;
 
   constructor(
-    private readonly fileService: FilesService,
+    protected readonly fileService: FilesService,
     private readonly spinnerService: SpinnerService,
     private readonly toastService: ToastService,
     private readonly router: Router,
@@ -74,14 +78,10 @@ export class FilesComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    if (this.route.firstChild) {
-      this.subscription = this.route.firstChild.params.subscribe(params => {
-        this.id = params['id'];
-        this.listFiles();
-      });
-    } else {
+    this.subscription = this.route.params.subscribe(params => {
+      this.id = params['id'];
       this.listFiles();
-    }
+    });
   }
 
   create() {
@@ -209,5 +209,31 @@ export class FilesComponent implements OnInit, OnDestroy {
     }
 
     this._subscription = value;
+  }
+
+  traverse(direction: 'left' | 'right') {
+    const currentPreviewFile = this.fileService.currentPreviewFile;
+    if(!currentPreviewFile)
+      return;
+
+    const objects = this.files.filter(x => x.type !== EFileType.Directory);
+    const currentObjectIndex = objects.findIndex(x => x.id === currentPreviewFile);
+    if(currentObjectIndex === -1)
+    {
+      this.toastService.error(EToastConstants.Warning, `The existing file doesn't seems to be available now!`)
+      this.fileService.closePreview();
+      return;
+    }
+
+    let nextIndex: number;
+
+    if (direction === 'right') {
+      nextIndex = (currentObjectIndex + 1) % objects.length; // Wrap around to 0 if at the end
+    } else { // direction === 'left'
+      nextIndex = (currentObjectIndex - 1 + objects.length) % objects.length; // Wrap around to last index if at the start
+    }
+
+    const nextFile = objects[nextIndex];
+    this.fileService.preview(nextFile.id)
   }
 }

@@ -34,3 +34,14 @@
     <app-files-list (gotoPrevious)="onGotoPrevious()" [showParent]="parents.length > 0" [files]="this.files" ></app-files-list>
   </div>
 </div>
+
+<p-dialog
+[(visible)]="this.fileService.previewFile" [modal]="true" closable="true" closeOnEscape closeTabindex [header]="" [maximizable]="true" [style]="{ width: '90%', height: '110%' }"
+(onHide)="fileService.closePreview()"
+>
+  <ng-template [pTemplate]="'headless'">
+    <div class="relative w-full h-full flex flex-col">
+      <app-file-item (onNext)="this.traverse('right')" (onPrev)="this.traverse('left')"></app-file-item>
+    </div>
+  </ng-template>
+</p-dialog>

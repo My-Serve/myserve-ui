@@ -40,3 +40,7 @@ app-files .p-breadcrumb {
 .fade-in-out {
   transition: opacity 0.3s ease-in-out;
 }
+
+.overlay-spinner {
+  z-index: 99999;
+}

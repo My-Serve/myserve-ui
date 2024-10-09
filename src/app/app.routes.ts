@@ -36,17 +36,22 @@ export const routes: Routes = [
       {
         path: 'files',
         title: 'My Files | My Serve',
-        loadComponent: () => import('./components/pages/dashboard/home/files/files.component').then(m => m.FilesComponent),
+        //loadComponent: () => import('./components/pages/dashboard/home/files/files.component').then(m => m.FilesComponent),
         children: [
           {
-            path: 'obj/:id',
-            title: 'View | My Serve',
-            loadComponent: () => import('./components/pages/dashboard/home/files/file-item/file-item.component').then(m => m.FileItemComponent),
+            path: '',
+            title: 'My Files | My Serve',
+            loadComponent: () => import('./components/pages/dashboard/home/files/files.component').then(m => m.FilesComponent),
           },
           {
             path: 'dir/:id',
             title: 'My Files | My Serve',
             loadComponent: () => import('./components/pages/dashboard/home/files/files.component').then(m => m.FilesComponent),
+          },
+          {
+            path: 'obj/:id',
+            title: 'View | My Serve',
+            loadComponent: () => import('./components/pages/dashboard/home/files/file-item/file-item.component').then(m => m.FileItemComponent),
           },
         ],
       },

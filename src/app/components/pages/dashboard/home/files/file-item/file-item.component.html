@@ -1,6 +1,58 @@
-<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white p-5 rounded-lg text-center">
-    <h2 class="text-xl font-semibold mb-2">Overlay Content</h2>
-    <p>This content is displayed on top of the main page.</p>
+<div class="relative w-full h-full flex flex-col" appKeyPress (onPress)="handleKeyDown($event)">
+  <!-- Header -->
+  <div class="absolute top-0 left-0 right-0 z-10">
+    <div class="header group bg-gradient-to-b from-gray-900 to-transparent transition-all duration-300 opacity-0 hover:opacity-100">
+      <div class="flex justify-between items-center p-4">
+        <div class="text-white cursor-pointer">
+          <p-button icon="pi pi-arrow-left" [rounded]="true" [text]="true" (onClick)="close()" />
+        </div>
+        <div class="title text-white text-lg">{{file?.name || 'N/A'}}</div>
+        <div class="flex space-x-2">
+          @if(file !== undefined){
+            <p-button icon="pi pi-heart" [rounded]="true" [pTooltip]="'Favourite'" [text]="true" severity="help" />
+            <p-button icon="pi pi-download" [rounded]="true" [pTooltip]="'Favourite'" [text]="true" severity="primary" />
+            <p-button icon="pi pi-share-alt" [rounded]="true" [pTooltip]="'Share'" [text]="true" severity="info" />
+            <p-button icon="pi pi-trash" [pTooltip]="'Delete'" [rounded]="true" [text]="true" severity="danger" />
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Container -->
+  <div class="flex-grow overflow-hidden bg-black">
+    @if (contentType === EContentType.Image){
+      <app-image-previewer class="flex items-center justify-center" [imageUrl]="file?.targetUrl!" [imageName]="file?.name! || 'N/A'">
+      </app-image-previewer>
+    } @else if (contentType === EContentType.Video){
+      <app-video-previewer class="flex items-center justify-center" [videoUrl]="file?.targetUrl!" [videoName]="file?.name! || 'N/A'">
+      </app-video-previewer>
+    } @else if (contentType === EContentType.Audio) {
+      <app-audio-previewer class="flex h-full items-center justify-center" [audioUrl]="file?.targetUrl!" [audioName]="file?.name! || 'N/A'"></app-audio-previewer>
+    } @else {
+      <app-unknown-previewer [fileName]="file?.name || 'N/A'"></app-unknown-previewer>
+    }
+
+    <!-- Left Navigation Button -->
+    <div class="absolute left-4 top-1/2 transform -translate-y-1/2 opacity-1 group-hover:opacity-100 transition-opacity duration-300 z-20">
+      <p-button
+        icon="pi pi-chevron-left"
+        [rounded]="true"
+        [text]="true"
+        (onClick)="onPrev.emit()"
+        class="text-white bg-black bg-opacity-50 hover:bg-opacity-75"
+      ></p-button>
+    </div>
+
+    <!-- Right Navigation Button -->
+    <div class="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-1 group-hover:opacity-100 transition-opacity duration-300 z-999">
+      <p-button
+        icon="pi pi-chevron-right"
+        [rounded]="true"
+        [text]="true"
+        (onClick)="onNext.emit()"
+        class="text-white bg-black bg-opacity-50 hover:bg-opacity-75"
+      ></p-button>
+    </div>
   </div>
 </div>

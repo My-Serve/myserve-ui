@@ -7,6 +7,7 @@ import {Router} from "@angular/router";
 import {Button} from "primeng/button";
 import {DataService} from "@services/data.service";
 import {EContentType} from "@constants/e-content-type";
+import {FilesService} from "@services/files.service";
 
 @Component({
   selector: 'app-files-list-item',
@@ -28,7 +29,8 @@ export class FilesListItemComponent implements OnInit{
   protected readonly EFileType = EFileType;
   constructor(
     protected readonly route: Router,
-    protected readonly dataService: DataService
+    protected readonly dataService: DataService,
+    private readonly fileService: FilesService,
   ) {
   }
 
@@ -37,7 +39,10 @@ export class FilesListItemComponent implements OnInit{
   }
 
   open() {
-    this.route.navigate(['home', 'files', this.fileItem().type.toLowerCase(), this.fileItem().id])
+    if(this.fileItem().type === EFileType.Directory)
+      this.route.navigate(['home', 'files', this.fileItem().type.toLowerCase(), this.fileItem().id])
+    else
+      this.fileService.preview(this.fileItem().id);
   }
 
   clickMore($event: MouseEvent) {

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 import {IListOptions} from "@others/models/list-options";
 import {ApiRoutes} from "@others/api.routes";
 import {
@@ -18,6 +18,9 @@ import {ActiveTaskService} from "./active-task.service";
   providedIn: 'root'
 })
 export class FilesService {
+
+  private _currentViewingFileId: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
+  private _previewFile: boolean = false;
 
   constructor(
     private readonly http: HttpClient,
@@ -42,7 +45,7 @@ export class FilesService {
   }
 
   id(id: string) : Observable<IGetFileByIdResponse> {
-    return this.http.get<IGetFileByIdResponse>(`${ApiRoutes.Files.id}/{id}`);
+    return this.http.get<IGetFileByIdResponse>(`${ApiRoutes.Files.id}/${id}`);
   }
 
   createFolder(name: string, parentId?: string) : Observable<ICreateFileResponse> {
@@ -87,5 +90,32 @@ export class FilesService {
 
   private create(command: ICreateFileCommand) : Observable<ICreateFileResponse> {
     return this.http.post<ICreateFileResponse>(ApiRoutes.Files.create, command);
+  }
+
+  public preview(id: string) {
+    this._currentViewingFileId.next(id)
+    this._previewFile = true;
+  }
+
+  public closePreview(){
+    this._currentViewingFileId.next(undefined)
+    this._previewFile = false;
+  }
+
+
+  get previewFile(): boolean {
+    return this._previewFile;
+  }
+
+  set previewFile(value: boolean) {
+    this._previewFile = value;
+  }
+
+  get currentPreviewFile() : string | undefined {
+    return this._currentViewingFileId.value;
+  }
+
+  get currentPreviewFileSubject() : BehaviorSubject<string | undefined> {
+    return this._currentViewingFileId;
   }
 }
