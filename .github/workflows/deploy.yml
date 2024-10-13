@@ -43,6 +43,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "downtime/index.html"
           target: "/var/www/myserve/"
+          strip_components: 1
           debug: true
 
       - name: Compress and move files
@@ -54,7 +55,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "dist/myserve-ui/*"
           target: "/var/www/myserve/"
-          strip_components: 2
+          strip_components: 3
           debug: true
 
       - name: Restart the webserver
