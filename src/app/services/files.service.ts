@@ -25,7 +25,7 @@ export class FilesService {
   private readonly _currentViewingFileId: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
   private _previewFile: boolean = false;
   private readonly _updateFavourite: BehaviorSubject<{ id: string, status: boolean } | undefined> = new BehaviorSubject<{ id: string, status: boolean } | undefined>(undefined);
-  private readonly _updateList: BehaviorSubject<{ id: string } | undefined> = new BehaviorSubject<{ id: string,} | undefined>(undefined);
+  private readonly _updateList: BehaviorSubject<{ id: string | undefined} | undefined> = new BehaviorSubject<{ id: string| undefined} | undefined>(undefined);
 
   constructor(
     private readonly http: HttpClient,
@@ -124,6 +124,26 @@ export class FilesService {
       );
   }
 
+  public rename(id: string, newName: string) : Observable<IFile> {
+    const operationBody : IOperation[] = [
+      {
+        op: 'replace',
+        path: '/name',
+        value: newName,
+      }
+    ];
+
+    return this.patch(id, operationBody)
+      .pipe(
+        tap(value => {
+          if(value)
+            this._updateList.next({
+              id: value?.parentId
+            })
+        })
+      );
+  }
+
   private patch(id: string, command: IOperation[]) : Observable<IFile> {
     return this.http.patch<IFile>(`${ApiRoutes.Files.patch}/${id}`, command);
   }
@@ -177,7 +197,7 @@ export class FilesService {
     return this._updateFavourite;
   }
 
-  get updateList(): BehaviorSubject<{ id: string } | undefined> {
+  get updateList(): BehaviorSubject<{ id: string | undefined } | undefined> {
     return this._updateList;
   }
 }

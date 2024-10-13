@@ -24,6 +24,7 @@ import {filter, skipWhile, Subscription} from "rxjs";
 import {DialogModule} from "primeng/dialog";
 import {FileItemComponent} from "@pages/dashboard/home/files/file-item/file-item.component";
 import {PopUpService} from "@services/pop-up.service";
+import {CreateEditFileComponent} from "@shared/files/create-directory-name/create-edit-file.component";
 
 @Component({
   selector: 'app-files',
@@ -40,6 +41,7 @@ import {PopUpService} from "@services/pop-up.service";
     FileDropperDirective,
     DialogModule,
     FileItemComponent,
+    CreateEditFileComponent,
   ],
   templateUrl: './files.component.html',
   styleUrls: ['./files.component.scss']
@@ -69,8 +71,7 @@ export class FilesComponent implements OnInit, OnDestroy {
       {
         label: 'Directory',
         command:  () => {
-          console.log(1)
-          this.popupService.openCreateEditPopupDirectory(undefined, this.id);
+          this.popupService.openCreateEditPopupDirectory(undefined, undefined, this.id);
         }
       }
     ];

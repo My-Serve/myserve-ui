@@ -9,9 +9,12 @@ export class PopUpService {
     show: boolean;
     existingName?: string;
     currentParent?: string;
+    isFile: boolean
+    existingElementId?: string
   } = {
     show: false,
-    existingName: undefined
+    existingName: undefined,
+    isFile: false,
   };
 
   constructor() { }
@@ -35,11 +38,18 @@ export class PopUpService {
     };
   }
 
-  public openCreateEditPopupDirectory(existingName?: string, currentParent?: string): void {
+  public openCreateEditPopupDirectory(existingName?: string, existingElementId?: string, currentParent?: string, isFile?: boolean): void {
     this._createEditPopupDirectory = {
       show: true,
       existingName: existingName,
-      currentParent: currentParent
+      currentParent: currentParent,
+      isFile: isFile ?? false,
+      existingElementId: existingElementId
     }
+  }
+
+
+  get createEditPopupDirectory(): { show: boolean; existingName?: string; currentParent?: string; isFile: boolean, existingElementId?: string } {
+    return this._createEditPopupDirectory;
   }
 }

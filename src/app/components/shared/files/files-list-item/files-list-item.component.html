@@ -1,4 +1,4 @@
-<li class="flex items-center border-b hover:bg-zinc-800 border-gray-300 p-2" (click)="this.open()">
+<li class="flex items-center border-b hover:bg-zinc-800 border-gray-300 p-2" #list (click)="this.open()">
   @if(fileItem().type === EFileType.Directory){
     <span class="material-symbols-outlined w-6 h-6">
       folder
@@ -55,6 +55,7 @@
       <p-button icon="pi pi-heart" [rounded]="true" [text]="true" (onClick)="toggleFavourite($event)" severity="help" />
     }
   }
+  <p-menu #menu [model]="menuItems" [popup]="true" />
   <p-button [rounded]="true" [text]="true" severity="success" (onClick)="clickMore($event)" icon="pi pi-ellipsis-v"></p-button>
-
 </li>
+<p-contextMenu [target]="list" [model]="menuItems" />

@@ -1,0 +1,11 @@
+<p-dialog header="{{this.header}}" [modal]="true" (onShow)="initialize()" [(visible)]="this.popupService.showCreatedEditPopupDirectory" [style]="{ width: '25rem' }">
+  <span class="p-text-secondary block mb-5"></span>
+  <div class="flex align-items-center gap-3 mb-3">
+    <label for="directory" class="text-small pt-1.5 w-[3rem]">Name</label>
+    <input pInputText id="directory" [(ngModel)]="this.modifiedDirectoryName" class="flex-auto" autocomplete="off" />
+  </div>
+  <div class="flex justify-center gap-2 mt-4">
+    <p-button label="Cancel" severity="secondary" (onClick)="cancel()" />
+    <p-button label="{{this.isEdit ? 'Update' : 'Create'}}" [disabled]="!valid" (onClick)="this.isEdit ? edit() : create()" />
+  </div>
+</p-dialog>
