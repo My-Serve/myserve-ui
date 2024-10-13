@@ -11,10 +11,11 @@ import {
   IRequestSignedUrlCommand,
   IRequestSignedUrlResponse
 } from "@models/files-model";
-import {extension} from "es-mime-types";
+
 import {ActiveTaskService} from "./active-task.service";
 import {IOperation} from "@others/models/operations";
 import {EHeaderKeys, EHeaderValues} from "@constants/e-header-constants";
+import mime from 'mime';
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +82,7 @@ export class FilesService {
 
   requestSignedUrl(mimeType: string, parentId?: string) : Observable<IRequestSignedUrlResponse> {
     let randomFileName = crypto.randomUUID().replace("-", "");
-    let extensionValue = extension(mimeType)
+    let extensionValue = mime.extension(mimeType)
     if(typeof extensionValue === "undefined" || typeof extensionValue === "boolean") {
       extensionValue = ''
     }else{
