@@ -30,6 +30,9 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             sudo rm -rf /var/www/myserve/*
+            sudo mkdir -p /var/www/myserve/dist/myserve-ui/
+            sudo chown -R :webusers /var/www/myserve/dist/myserve-ui/
+            sudo chmod -R 775 /var/www/myserve/dist/myserve-ui/
 
       - name: Replace with Downtime Page
         uses: appleboy/scp-action@master
