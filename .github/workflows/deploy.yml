@@ -30,7 +30,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             sudo rm -rf /var/www/myserve/*
-            sudo mkdir -p /var/www/myserve/dist/myserve-ui/
+            sudo mkdir -p /var/www/myserve/
             sudo chown -R :webusers /var/www/myserve/
             sudo chmod -R 775 /var/www/myserve/
 
@@ -41,7 +41,7 @@ jobs:
           username: ${{ secrets.VM_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
-          source: "downtime/*"
+          source: "downtime/index.html"
           target: "/var/www/myserve/"
           debug: true
 
@@ -53,7 +53,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "dist/myserve-ui/*"
-          target: "/var/www/myserve/dist/myserve-ui/"
+          target: "/var/www/myserve/"
+          strip_components: 2
           debug: true
 
       - name: Restart the webserver
