@@ -10,6 +10,21 @@ export const routes: Routes = [
     children: []
   },
   {
+    path: 'callback',
+    children: [
+      {
+        path: 'google',
+        title: 'Google OAuth | Please wait',
+        loadComponent: () => import('./components/pages/auth/sign-in/google-callback/google-callback.component').then(m => m.GoogleCallbackComponent),
+      },
+      {
+        path: 'otp',
+        title: 'OTP Validation | Please wait',
+        loadComponent: () => import('./components/pages/auth/sign-in/otp-callback/otp-callback.component').then(m => m.OtpCallbackComponent),
+      }
+    ]
+  },
+  {
     path: 'profile',
     canActivate: [authGuard],
     title: 'Create Profile | My Serve',

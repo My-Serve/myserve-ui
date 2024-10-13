@@ -11,6 +11,7 @@ export interface IFile {
   createdAt: string;
   type: EFileType,
   ownerProfile: IUserIdentification
+  favourite: boolean
 }
 
 export interface IParentDirectory {

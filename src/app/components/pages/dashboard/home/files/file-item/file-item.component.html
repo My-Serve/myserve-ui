@@ -9,10 +9,14 @@
         <div class="title text-white text-lg">{{file?.name || 'N/A'}}</div>
         <div class="flex space-x-2">
           @if(file !== undefined){
-            <p-button icon="pi pi-heart" [rounded]="true" [pTooltip]="'Favourite'" [text]="true" severity="help" />
-            <p-button icon="pi pi-download" [rounded]="true" [pTooltip]="'Favourite'" [text]="true" severity="primary" />
+            @if(file.favourite){
+              <p-button icon="pi pi-heart-fill" [rounded]="true" [pTooltip]="'Favourite'" [text]="true" (onClick)="toggleFavourite()" severity="help" />
+            } @else {
+              <p-button icon="pi pi-heart" [rounded]="true" [pTooltip]="'Favourite'" [text]="true" (onClick)="toggleFavourite()" severity="help" />
+            }
+            <p-button icon="pi pi-download" [rounded]="true" [pTooltip]="'Download'" (onClick)="download()" [text]="true" severity="primary" />
             <p-button icon="pi pi-share-alt" [rounded]="true" [pTooltip]="'Share'" [text]="true" severity="info" />
-            <p-button icon="pi pi-trash" [pTooltip]="'Delete'" [rounded]="true" [text]="true" severity="danger" />
+            <p-button icon="pi pi-trash" [pTooltip]="'Delete'" (onClick)="deleteFile()" [rounded]="true" [text]="true" severity="danger" />
           }
         </div>
       </div>

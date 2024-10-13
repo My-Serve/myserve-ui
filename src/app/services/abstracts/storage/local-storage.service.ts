@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {AbstractStorageService} from "./abstract.storage.service";
-import {SKey} from "../../../others/storage/storage.keys";
+import {SKey} from "@others/storage/storage.keys";
 
 @Injectable()
 export class LocalStorageService extends AbstractStorageService {

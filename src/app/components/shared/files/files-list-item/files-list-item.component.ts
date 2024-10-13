@@ -52,4 +52,15 @@ export class FilesListItemComponent implements OnInit{
   }
 
   protected readonly EContentType = EContentType;
+
+  toggleFavourite(event: MouseEvent) {
+    event.stopPropagation();
+
+    this.fileService.favourite(this.fileItem().id, !this.fileItem().favourite).subscribe({
+      next: value => {
+        this.fileItem().favourite = value.favourite;
+      }
+    })
+  }
+
 }

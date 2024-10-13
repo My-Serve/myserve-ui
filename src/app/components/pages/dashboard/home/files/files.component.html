@@ -41,7 +41,7 @@
 >
   <ng-template [pTemplate]="'headless'">
     <div class="relative w-full h-full flex flex-col">
-      <app-file-item (onNext)="this.traverse('right')" (onPrev)="this.traverse('left')"></app-file-item>
+      <app-file-item (onNext)="this.traverse('right')" (onPrev)="this.traverse('left')" (onDelete)="this.listFiles()"></app-file-item>
     </div>
   </ng-template>
 </p-dialog>

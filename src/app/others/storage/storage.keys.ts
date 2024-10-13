@@ -31,6 +31,7 @@ export class StorageKeys {
   public static readonly LastPersistedEmailKey : SKey = StorageKeys.frameKey(EKeyModule.Persistence, ["email"]);
   public static readonly LastPersistedSettings : SKey = StorageKeys.frameKey(EKeyModule.Persistence, ["settings"]);
   public static readonly AuthTokens : SKey = StorageKeys.frameKey(EKeyModule.Auth, ["access"]);
+  public static readonly RedirectTo: SKey = StorageKeys.frameKey(EKeyModule.Persistence, ["redirectTo"]);
 
   public static frameKey(module: EKeyModule | string, routes: string[]) : SKey{
     if(!routes || routes.length == 0){

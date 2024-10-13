@@ -30,3 +30,20 @@ export interface IRefreshTokenResponse {
   accessToken: string;
   refreshToken: string;
 }
+
+export interface IOAuthCommand {
+  oAuthType: OAuthType,
+  identity: string
+  device?: string | null
+}
+
+export interface IOAuthResponse {
+  success: boolean;
+  message?: string;
+  accessToken?: string;
+  refreshToken?: string;
+}
+
+export enum OAuthType {
+  Google = "Google",
+}

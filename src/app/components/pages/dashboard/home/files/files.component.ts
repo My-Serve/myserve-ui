@@ -20,9 +20,10 @@ import {ActiveTaskService} from "@services/active-task.service";
 import {TaskLabel} from "@constants/e-task-label";
 import {removeQueryParams} from "@utils/string.utils";
 import {HttpErrorResponse} from "@angular/common/http";
-import {Subscription} from "rxjs";
+import {filter, skipWhile, Subscription} from "rxjs";
 import {DialogModule} from "primeng/dialog";
 import {FileItemComponent} from "@pages/dashboard/home/files/file-item/file-item.component";
+import {PopUpService} from "@services/pop-up.service";
 
 @Component({
   selector: 'app-files',
@@ -49,7 +50,7 @@ export class FilesComponent implements OnInit, OnDestroy {
   parents: IParentDirectory[] = []
   files: IFile[] = []
   readonly uploadMenuItems: MenuItem[]
-  private _subscription?: Subscription;
+  private readonly subscriptions: Subscription[] = [];
 
   constructor(
     protected readonly fileService: FilesService,
@@ -59,6 +60,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     private readonly route: ActivatedRoute,
     private readonly uploadService: UploadService,
     private readonly taskService: ActiveTaskService,
+    private readonly popupService: PopUpService
   ) {
     this.uploadMenuItems = [
       {
@@ -66,22 +68,51 @@ export class FilesComponent implements OnInit, OnDestroy {
       },
       {
         label: 'Directory',
+        command:  () => {
+          console.log(1)
+          this.popupService.openCreateEditPopupDirectory(undefined, this.id);
+        }
       }
     ];
   }
 
   ngOnDestroy(): void {
-    if(this.subscription){
-      this._subscription?.unsubscribe();
-    }
+    this.subscriptions.forEach(x => x.unsubscribe());
   }
 
 
   ngOnInit(): void {
-    this.subscription = this.route.params.subscribe(params => {
+    const routeSubscription = this.route.params.subscribe(params => {
       this.id = params['id'];
       this.listFiles();
     });
+
+    const favouriteSub = this.fileService.updateFavourite.pipe(
+      filter(x => typeof x !== 'undefined')
+    ).subscribe({
+      next: value => {
+        const foundFile = this.files.find(x => x.id === value?.id);
+        if(!foundFile)
+          return
+
+        foundFile.favourite = value?.status ?? false;
+      }
+    })
+
+    const listUpdateSubscription = this.fileService.updateList.pipe(
+      filter(x => typeof x !== 'undefined')
+    ).subscribe({
+      next: value => {
+        if(value!.id !== this.id)
+          return;
+
+        this.listFiles();
+      }
+    })
+
+    this.subscriptions.push(favouriteSub);
+    this.subscriptions.push(routeSubscription);
+    this.subscriptions.push(listUpdateSubscription);
   }
 
   create() {
@@ -198,18 +229,6 @@ export class FilesComponent implements OnInit, OnDestroy {
     return this.parents.at(-1)!.id
   }
 
-
-  get subscription(): Subscription | undefined {
-    return this._subscription;
-  }
-
-  set subscription(value: Subscription) {
-    if(this._subscription){
-      this._subscription.unsubscribe();
-    }
-
-    this._subscription = value;
-  }
 
   traverse(direction: 'left' | 'right') {
     const currentPreviewFile = this.fileService.currentPreviewFile;

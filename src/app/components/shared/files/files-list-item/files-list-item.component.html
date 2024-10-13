@@ -47,9 +47,14 @@
     <span class="w-16 text-center mx-9"></span>
     <span class="flex-1 my-text">{{fileItem().ownerProfile | nameParser}}</span>
   }
-  <p-button outlined (onClick)="clickMore($event)">
-    <span class="material-symbols-outlined">
-      more_vert
-    </span>
-  </p-button>
+
+  @if(fileItem().type !== EFileType.Directory){
+    @if(fileItem().favourite){
+      <p-button icon="pi pi-heart-fill" [rounded]="true"  [text]="true" (onClick)="toggleFavourite($event)" severity="help" />
+    } @else {
+      <p-button icon="pi pi-heart" [rounded]="true" [text]="true" (onClick)="toggleFavourite($event)" severity="help" />
+    }
+  }
+  <p-button [rounded]="true" [text]="true" severity="success" (onClick)="clickMore($event)" icon="pi pi-ellipsis-v"></p-button>
+
 </li>

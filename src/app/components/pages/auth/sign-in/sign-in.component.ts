@@ -90,7 +90,7 @@ export class SignInComponent implements OnInit, OnDestroy {
     this.isEmailRequesting = true;
     this.loading = true;
 
-    this.authService.loginWithOtp({emailAddress: this.emailAddress})
+    this.authService.requestOtp({emailAddress: this.emailAddress})
       .subscribe({
         next: (response) => {
           this.isEmailRequesting = false;
@@ -198,15 +198,14 @@ export class SignInComponent implements OnInit, OnDestroy {
         this.profileService.getProfile().subscribe({
           next: async (response) => {
             if(response){
-              await this.router.navigate(['home'])
+              await this.checkAndRedirect()
               return;
             }
 
             if(!await this.profileService.hasProfile()){
               await this.router.navigate(['profile'])
             }else{
-              await this.router.navigate(['home'])
-              return;
+              await this.checkAndRedirect()
             }
           },
           error: (error) => {
@@ -224,4 +223,18 @@ export class SignInComponent implements OnInit, OnDestroy {
     })
   }
 
+  googleLogin() {
+    this.authService.requestGoogleLogin();
+  }
+
+  private async checkAndRedirect(){
+    const redirectUrl = await this.storageService.getOrDefaultStringAsync(StorageKeys.RedirectTo, undefined);
+    if(!redirectUrl){
+      await this.router.navigate(['home'])
+      return;
+    }else{
+      await this.router.navigate(redirectUrl.split("/"))
+      return;
+    }
+  }
 }

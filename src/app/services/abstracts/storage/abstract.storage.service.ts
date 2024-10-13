@@ -1,4 +1,4 @@
-import {SKey} from "../../../others/storage/storage.keys";
+import {SKey} from "@others/storage/storage.keys";
 
 export abstract class AbstractStorageService {
 

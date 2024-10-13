@@ -14,3 +14,9 @@ export function removeQueryParams(url: string) {
   const urlObj = new URL(url);
   return urlObj.origin + urlObj.pathname;
 }
+
+export function convertOffsetToDate(expiry: string) : Date {
+  // Truncate to 3 decimal places
+  const truncatedExpiry = expiry.replace(/(\.\d{3})\d*/, '$1');
+  return new Date(truncatedExpiry);
+}

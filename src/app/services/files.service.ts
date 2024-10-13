@@ -1,26 +1,30 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {BehaviorSubject, Observable} from "rxjs";
+import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
+import {BehaviorSubject, catchError, map, Observable, of, tap} from "rxjs";
 import {IListOptions} from "@others/models/list-options";
 import {ApiRoutes} from "@others/api.routes";
 import {
   EFileType,
   EPublicSignedUrlRequestType,
-  ICreateFileCommand, ICreateFileResponse, IGetFileByIdResponse,
+  ICreateFileCommand, ICreateFileResponse, IFile, IGetFileByIdResponse,
   IListFilesResponse,
   IRequestSignedUrlCommand,
   IRequestSignedUrlResponse
 } from "@models/files-model";
 import {extension} from "es-mime-types";
 import {ActiveTaskService} from "./active-task.service";
+import {IOperation} from "@others/models/operations";
+import {EHeaderKeys, EHeaderValues} from "@constants/e-header-constants";
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilesService {
 
-  private _currentViewingFileId: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
+  private readonly _currentViewingFileId: BehaviorSubject<string | undefined> = new BehaviorSubject<string | undefined>(undefined);
   private _previewFile: boolean = false;
+  private readonly _updateFavourite: BehaviorSubject<{ id: string, status: boolean } | undefined> = new BehaviorSubject<{ id: string, status: boolean } | undefined>(undefined);
+  private readonly _updateList: BehaviorSubject<{ id: string } | undefined> = new BehaviorSubject<{ id: string,} | undefined>(undefined);
 
   constructor(
     private readonly http: HttpClient,
@@ -44,8 +48,15 @@ export class FilesService {
     })
   }
 
-  id(id: string) : Observable<IGetFileByIdResponse> {
-    return this.http.get<IGetFileByIdResponse>(`${ApiRoutes.Files.id}/${id}`);
+  id(id: string, fetchFresh?: boolean) : Observable<IGetFileByIdResponse> {
+    let headers = new HttpHeaders();
+    fetchFresh ??= false
+    if(fetchFresh){
+      headers = headers.set(EHeaderKeys.CacheControl, EHeaderValues.NoCache)
+    }
+    return this.http.get<IGetFileByIdResponse>(`${ApiRoutes.Files.id}/${id}`, {
+      headers: headers
+    });
   }
 
   createFolder(name: string, parentId?: string) : Observable<ICreateFileResponse> {
@@ -92,6 +103,30 @@ export class FilesService {
     return this.http.post<ICreateFileResponse>(ApiRoutes.Files.create, command);
   }
 
+  public favourite(id: string, status: boolean) : Observable<IFile> {
+    const operationBody : IOperation[] = [
+      {
+        op: 'replace',
+        path: '/favourite',
+        value: status.toString(),
+      }
+    ];
+
+    return this.patch(id, operationBody)
+      .pipe(
+        tap(_ => {
+          this._updateFavourite.next({
+            id: id,
+            status: status
+          })
+        })
+      );
+  }
+
+  private patch(id: string, command: IOperation[]) : Observable<IFile> {
+    return this.http.patch<IFile>(`${ApiRoutes.Files.patch}/${id}`, command);
+  }
+
   public preview(id: string) {
     this._currentViewingFileId.next(id)
     this._previewFile = true;
@@ -100,6 +135,24 @@ export class FilesService {
   public closePreview(){
     this._currentViewingFileId.next(undefined)
     this._previewFile = false;
+  }
+
+  public delete(id: string) : Observable<boolean> {
+    return this.http.delete(`${ApiRoutes.Files.delete}/${id}`)
+      .pipe(
+        map(_ => {
+          return true;
+        }),
+        catchError(err => {
+          if(err instanceof HttpErrorResponse){
+            if(err.status === 404){
+              console.error("The provided file doesn't exists")
+            }
+          }
+
+          return of(false);
+        })
+      )
   }
 
 
@@ -117,5 +170,13 @@ export class FilesService {
 
   get currentPreviewFileSubject() : BehaviorSubject<string | undefined> {
     return this._currentViewingFileId;
+  }
+
+  get updateFavourite(): BehaviorSubject<{ id: string, status: boolean } | undefined> {
+    return this._updateFavourite;
+  }
+
+  get updateList(): BehaviorSubject<{ id: string } | undefined> {
+    return this._updateList;
   }
 }
