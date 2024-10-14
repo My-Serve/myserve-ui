@@ -15,7 +15,7 @@ import {
 import {ActiveTaskService} from "./active-task.service";
 import {IOperation} from "@others/models/operations";
 import {EHeaderKeys, EHeaderValues} from "@constants/e-header-constants";
-import mime from 'mime';
+import * as mime from 'mime-types';
 
 @Injectable({
   providedIn: 'root'

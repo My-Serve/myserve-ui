@@ -58,4 +58,4 @@
   <p-menu #menu [model]="menuItems" [popup]="true" />
   <p-button [rounded]="true" [text]="true" severity="success" (onClick)="clickMore($event)" icon="pi pi-ellipsis-v"></p-button>
 </li>
-<p-contextMenu [target]="list" [model]="menuItems" />
+<p-contextMenu #contextMenu (onShow)="this.fileListStateService.close(this.fileItem().id, 'context')" [target]="list" [model]="menuItems" />

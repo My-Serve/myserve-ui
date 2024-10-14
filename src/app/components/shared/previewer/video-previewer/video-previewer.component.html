@@ -4,6 +4,8 @@
   [style]="{ height: '90vh' }"
   class="max-w-full w-auto h-auto object-fit"
   alt="Video preview"
+  (load)="this.loadComplete()"
 >
   Your browser does not support the video tag.
 </video>
+

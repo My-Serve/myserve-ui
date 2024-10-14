@@ -9,9 +9,10 @@ import {DataService} from "@services/data.service";
 import {EContentType} from "@constants/e-content-type";
 import {FilesService} from "@services/files.service";
 import {MenuItem, PrimeIcons} from "primeng/api";
-import {ContextMenuModule} from "primeng/contextmenu";
+import {ContextMenu, ContextMenuModule} from "primeng/contextmenu";
 import {Menu, MenuModule} from "primeng/menu";
 import {PopUpService} from "@services/pop-up.service";
+import {FileListStateService} from "@services/file-list-state.service";
 
 @Component({
   selector: 'app-files-list-item',
@@ -31,17 +32,17 @@ export class FilesListItemComponent implements OnInit{
 
   fileItem = input.required<IFile>();
   @ViewChild('menu') menu?: Menu;
+  @ViewChild('contextMenu') contextMenu?: ContextMenu;
   protected contentType: EContentType = EContentType.Unknown;
   protected readonly menuItems: MenuItem[] = [];
-
-
 
   protected readonly EFileType = EFileType;
   constructor(
     protected readonly route: Router,
     protected readonly dataService: DataService,
     private readonly fileService: FilesService,
-    private readonly popupService: PopUpService
+    private readonly popupService: PopUpService,
+    protected readonly fileListStateService: FileListStateService,
   ) {
 
   }
@@ -87,6 +88,25 @@ export class FilesListItemComponent implements OnInit{
       },
       icon: PrimeIcons.TRASH
     })
+
+    this.fileListStateService.closeAllMenus$.subscribe({
+      next: value => {
+        if(value && value.id === this.fileItem().id)
+        {
+          if(value.source === "context")
+            this.menu?.hide();
+          else
+            this.contextMenu?.hide();
+          return;
+        }
+
+        this.contextMenu?.hide();
+        this.menu?.hide();
+      },
+      error: err => {
+        console.error(err);
+      }
+    })
   }
 
   open() {
@@ -99,6 +119,7 @@ export class FilesListItemComponent implements OnInit{
   clickMore($event: MouseEvent) {
     $event.stopPropagation();
     $event.preventDefault();
+    this.fileListStateService.close(this.fileItem().id, "more");
     this.menu?.toggle($event);
   }
 

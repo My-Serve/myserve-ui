@@ -3,6 +3,7 @@
     controls
     [src]="sanitizedAudioUrl"
     class="mx-aut"
+    (load)="this.loadComplete()"
   >
   Your browser does not support the audio tag.
   </audio>
