@@ -13,6 +13,10 @@ import {ContextMenu, ContextMenuModule} from "primeng/contextmenu";
 import {Menu, MenuModule} from "primeng/menu";
 import {PopUpService} from "@services/pop-up.service";
 import {FileListStateService} from "@services/file-list-state.service";
+import {AbstractDownloadService} from "@services/abstracts/downloads/abstract-download-service";
+import {ToastService} from "@services/toast.service";
+import {EToastConstants} from "@constants/e-toast-constants";
+import {SpinnerService} from "@services/spinner.service";
 
 @Component({
   selector: 'app-files-list-item',
@@ -43,6 +47,9 @@ export class FilesListItemComponent implements OnInit{
     private readonly fileService: FilesService,
     private readonly popupService: PopUpService,
     protected readonly fileListStateService: FileListStateService,
+    private readonly downloadService: AbstractDownloadService,
+    private readonly toastService: ToastService,
+    private readonly spinnerService: SpinnerService
   ) {
 
   }
@@ -67,7 +74,8 @@ export class FilesListItemComponent implements OnInit{
         id: 'share',
         label: 'Share',
         command: async (eve) => {
-
+          eve.originalEvent?.preventDefault();
+          eve.originalEvent?.stopPropagation();
         },
         icon: PrimeIcons.SHARE_ALT
       });
@@ -75,7 +83,10 @@ export class FilesListItemComponent implements OnInit{
         id: 'download',
         label: 'Download',
         command: async (eve) => {
+          eve.originalEvent?.preventDefault();
+          eve.originalEvent?.stopPropagation();
 
+          this.download();
         },
         icon: PrimeIcons.DOWNLOAD
       })
@@ -84,7 +95,10 @@ export class FilesListItemComponent implements OnInit{
       id: 'delete',
       label: "Delete",
       command: async (eve) => {
+        eve.originalEvent?.preventDefault();
+        eve.originalEvent?.stopPropagation();
 
+        this.delete();
       },
       icon: PrimeIcons.TRASH
     })
@@ -105,6 +119,43 @@ export class FilesListItemComponent implements OnInit{
       },
       error: err => {
         console.error(err);
+      }
+    })
+  }
+
+  download(){
+    if(this.fileItem().type === EFileType.Directory)
+    {
+      this.toastService.error(EToastConstants.Error, "Downloading an entire folder is not supported right now!")
+      return
+    }
+
+    this.downloadService.download(this.fileItem().targetUrl!, this.fileItem().name).subscribe({
+      next: downloadResponse => {
+        this.toastService.success(EToastConstants.DownloadSuccess, `Your file ${this.fileItem().name} has been downloaded!`)
+      }
+    })
+  }
+
+  delete(){
+    const me = this.fileItem().name;
+    const deleteSpinner = this.spinnerService.create(`Deleting ${me}...`)
+    this.fileService.delete(this.fileItem().id).subscribe({
+      next: value => {
+        deleteSpinner.release();
+        if(value){
+          this.fileService.updateList.next({
+            id: this.fileItem().parentId
+          })
+          this.toastService.success(EToastConstants.Success, `${me} is successfully deleted!`)
+          this.fileService.closePreview();
+        }else{
+          this.toastService.error(EToastConstants.Error, `Failed to delete the file`)
+        }
+      },
+      error: err => {
+        deleteSpinner.release();
+        this.toastService.error(EToastConstants.Error, `Failed to delete the file`)
       }
     })
   }

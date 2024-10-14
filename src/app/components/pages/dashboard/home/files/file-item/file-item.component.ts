@@ -15,6 +15,7 @@ import {AudioPreviewerComponent} from "@shared/previewer/audio-previewer/audio-p
 import {UnknownPreviewerComponent} from "@shared/previewer/unknown-previewer/unknown-previewer.component";
 import {EToastConstants} from "@constants/e-toast-constants";
 import {AbstractDownloadService} from "@services/abstracts/downloads/abstract-download-service";
+import {PdfPreviewerComponent} from "@shared/previewer/pdf-previewer/pdf-previewer.component";
 
 @Component({
   selector: 'app-file-item',
@@ -26,7 +27,8 @@ import {AbstractDownloadService} from "@services/abstracts/downloads/abstract-do
     KeyPressDirective,
     VideoPreviewerComponent,
     AudioPreviewerComponent,
-    UnknownPreviewerComponent
+    UnknownPreviewerComponent,
+    PdfPreviewerComponent
   ],
   templateUrl: './file-item.component.html',
   styleUrls: ['file-item.component.scss'],

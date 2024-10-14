@@ -20,7 +20,7 @@ import {ActiveTaskService} from "@services/active-task.service";
 import {TaskLabel} from "@constants/e-task-label";
 import {removeQueryParams} from "@utils/string.utils";
 import {HttpErrorResponse} from "@angular/common/http";
-import {filter, skipWhile, Subscription} from "rxjs";
+import {filter, skip, skipWhile, Subscription} from "rxjs";
 import {DialogModule} from "primeng/dialog";
 import {FileItemComponent} from "@pages/dashboard/home/files/file-item/file-item.component";
 import {PopUpService} from "@services/pop-up.service";
@@ -89,6 +89,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     });
 
     const favouriteSub = this.fileService.updateFavourite.pipe(
+      skip(1), // Skip the initial emission
       filter(x => typeof x !== 'undefined')
     ).subscribe({
       next: value => {
@@ -101,6 +102,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     })
 
     const listUpdateSubscription = this.fileService.updateList.pipe(
+      skip(1),
       filter(x => typeof x !== 'undefined')
     ).subscribe({
       next: value => {

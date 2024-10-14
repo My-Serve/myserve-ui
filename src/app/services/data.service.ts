@@ -32,6 +32,8 @@ export class DataService {
 
     this.fileType["audio/mpeg"] = EContentType.Audio;
 
+    this.fileType["application/pdf"] = EContentType.Pdf;
+
     this.fileType["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"] = EContentType.Sheet;
   }
 }

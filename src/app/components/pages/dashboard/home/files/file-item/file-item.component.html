@@ -33,6 +33,8 @@
       </app-video-previewer>
     } @else if (contentType === EContentType.Audio) {
       <app-audio-previewer class="flex h-full items-center justify-center" [audioUrl]="file?.targetUrl!" [audioName]="file?.name! || 'N/A'"></app-audio-previewer>
+    } @else if (contentType === EContentType.Pdf){
+      <app-pdf-previewer class="flex h-full items-center justify-center" [pdfName]="file?.name || 'N/A'" [pdfUrl]="file?.targetUrl!" [pdfSize]="file?.targetSize || 0"></app-pdf-previewer>
     } @else {
       <app-unknown-previewer [fileName]="file?.name || 'N/A'"></app-unknown-previewer>
     }
@@ -44,7 +46,7 @@
         [rounded]="true"
         [text]="true"
         (onClick)="onPrev.emit()"
-        class="text-white bg-black bg-opacity-50 hover:bg-opacity-75"
+        class="text-white bg-opacity-50 hover:bg-opacity-75"
       ></p-button>
     </div>
 
@@ -55,7 +57,8 @@
         [rounded]="true"
         [text]="true"
         (onClick)="onNext.emit()"
-        class="text-white bg-black bg-opacity-50 hover:bg-opacity-75"
+        styleClass="custom-nav-button"
+        class="text-white bg-opacity-50 hover:bg-opacity-75"
       ></p-button>
     </div>
   </div>
