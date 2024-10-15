@@ -102,8 +102,7 @@ export class FilesComponent implements OnInit, OnDestroy {
     })
 
     const listUpdateSubscription = this.fileService.updateList.pipe(
-      skip(1),
-      filter(x => typeof x !== 'undefined')
+      skip(1)
     ).subscribe({
       next: value => {
         if(value!.id !== this.id)

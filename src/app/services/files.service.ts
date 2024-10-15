@@ -138,7 +138,7 @@ export class FilesService {
         tap(value => {
           if(value)
             this._updateList.next({
-              id: value?.parentId
+              id: value?.parentId ?? undefined
             })
         })
       );

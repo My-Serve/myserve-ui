@@ -145,7 +145,7 @@ export class FilesListItemComponent implements OnInit{
         deleteSpinner.release();
         if(value){
           this.fileService.updateList.next({
-            id: this.fileItem().parentId
+            id: this.fileItem().parentId ?? undefined
           })
           this.toastService.success(EToastConstants.Success, `${me} is successfully deleted!`)
           this.fileService.closePreview();
