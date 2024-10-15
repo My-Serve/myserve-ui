@@ -15,7 +15,7 @@ import {
 import {ActiveTaskService} from "./active-task.service";
 import {IOperation} from "@others/models/operations";
 import {EHeaderKeys, EHeaderValues} from "@constants/e-header-constants";
-import * as mime from 'mime-types';
+import mime from 'mime/lite';
 
 @Injectable({
   providedIn: 'root'
@@ -82,8 +82,8 @@ export class FilesService {
 
   requestSignedUrl(mimeType: string, parentId?: string) : Observable<IRequestSignedUrlResponse> {
     let randomFileName = crypto.randomUUID().replace("-", "");
-    let extensionValue = mime.extension(mimeType)
-    if(typeof extensionValue === "undefined" || typeof extensionValue === "boolean") {
+    let extensionValue = mime.getExtension(mimeType)
+    if(!extensionValue || typeof extensionValue === "undefined") {
       extensionValue = ''
     }else{
       extensionValue = `.${extensionValue}`;

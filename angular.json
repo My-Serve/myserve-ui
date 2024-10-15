@@ -37,6 +37,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": ["mime/lite"],
             "outputPath": "dist/myserve-ui",
             "index": "src/index.html",
             "browser": "src/main.ts",
