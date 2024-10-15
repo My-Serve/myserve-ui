@@ -101,9 +101,6 @@ export class CreateEditFileComponent implements OnInit, OnDestroy {
     this.fileService.rename(this.popupService.createEditPopupDirectory.existingElementId!, this.modifiedDirectoryName).subscribe({
       next: value => {
         spinner.release()
-        if(!value || !value.parentId)
-          return
-
         this.toastService.success(EToastConstants.Success, "Successfully created "+this.modifiedDirectoryName)
         this.cancel();
       },
