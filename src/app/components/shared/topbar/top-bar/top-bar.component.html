@@ -1,19 +1,20 @@
 <div class="flex items-center justify-center w-full h-14 bg-zinc-900">
   <div class="flex">
     <p-iconField iconPosition="left">
-      <p-inputIcon styleClass="pi pi-search" />
+      <p-inputIcon  *ngIf="searching" styleClass="pi pi-search" />
       <p-autoComplete
         dropdownIcon="pi pi-search"
         placeholder="Search..."
         inputStyleClass="w-[40vw] bg-zinc-800"
-        optionLabel="name">
-        <ng-template let-country pTemplate="item">
-          <div class="flex align-items-center gap-2">
-            <!--          <img-->
-            <!--            src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"-->
-            <!--            [class]="'flag flag-' + country.code.toLowerCase()"-->
-            <!--            style="width: 18px" />-->
-            <!--          <div>{{ country.name }}</div>-->
+        [suggestions]="searchResults"
+        (completeMethod)="this.search($event)"
+        optionLabel="name"
+        #autoComplete
+        showClear
+      >
+        <ng-template let-eachSearch pTemplate="item">
+          <div class="flex w-full align-items-center gap-2">
+            <app-top-bar-item class="w-full" (select)="act(eachSearch)" [entity]="eachSearch"></app-top-bar-item>
           </div>
         </ng-template>
       </p-autoComplete>

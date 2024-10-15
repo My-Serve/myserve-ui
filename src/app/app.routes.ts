@@ -62,12 +62,7 @@ export const routes: Routes = [
             path: 'dir/:id',
             title: 'My Files | My Serve',
             loadComponent: () => import('./components/pages/dashboard/home/files/files.component').then(m => m.FilesComponent),
-          },
-          {
-            path: 'obj/:id',
-            title: 'View | My Serve',
-            loadComponent: () => import('./components/pages/dashboard/home/files/file-item/file-item.component').then(m => m.FileItemComponent),
-          },
+          }
         ],
       },
       {

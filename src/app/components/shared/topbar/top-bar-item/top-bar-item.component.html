@@ -1,0 +1,41 @@
+<div class="w-full" (click)="onClick($event)">
+  <div class="flex w-full items-center justify-between py-1 px-2 transition-colors duration-200">
+    <div class="flex items-center space-x-2 flex-grow min-w-0">
+      @switch (entity().service){
+        @case ("File"){
+          @if(entity().metadata["Type"] === EFileType.Directory){
+            <span class="material-symbols-outlined">
+              folder
+            </span>
+          }@else
+          {
+            <span class="material-symbols-outlined">
+              draft
+            </span>
+          }
+        }
+      }
+      <span class="text-sm my-text truncate">{{ entity().name }}</span>
+      @switch (entity().service){
+        @case ("File"){
+          @if(entity().metadata["Type"] === EFileType.Directory){
+            <span class="text-xs right-0.5 text-gray-500 pt-0.5 ml-2 flex-shrink-0"></span>
+          } @else {
+            <span class="text-xs text-gray-500 pt-0.5 ml-2 flex-shrink-0"> {{entity().metadata["TargetSize"] ?? 0 | toNumber | storageSize}} </span>
+          }
+        }
+      }
+    </div>
+
+    <!-- Right most service -->
+    @switch (entity().service){
+      @case ("File"){
+        @if(entity().metadata["Type"] === EFileType.Directory){
+          <span class="text-xs text-gray-500 pt-0.5 ml-2 flex-shrink-0">Directory</span>
+        } @else {
+          <span class="text-xs text-gray-500 pt-0.5 ml-2 truncate flex-shrink-0"> File {{ entity().metadata["MimeType"] || '' }}</span>
+        }
+      }
+    }
+  </div>
+</div>

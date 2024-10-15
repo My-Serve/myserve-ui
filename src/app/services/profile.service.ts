@@ -1,11 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {BehaviorSubject, catchError, from, Observable, of, switchMap, tap, throwError} from "rxjs";
+import {BehaviorSubject, catchError, from, map, Observable, of, switchMap, tap} from "rxjs";
 import {IProfileCreateCommand, IProfileCreateResponse, IProfileModel} from "@models/profile-model";
 import {AuthService} from "./auth.service";
 import {ApiRoutes} from "@others/api.routes";
 import {compressImage} from "@utils/image-compression.utils";
 import {NgxImageCompressService} from "ngx-image-compress";
+import {ISearchResult, MeSearchResponse} from "@models/misc-models";
 
 @Injectable({
   providedIn: 'root'
@@ -99,5 +100,21 @@ export class ProfileService {
         resolve(this._hasProfile!);
       }
     });
+  }
+
+  public search(searchParam: string) : Observable<ISearchResult[]> {
+    if(searchParam.trim().length <= 3)
+      return of([]);
+
+    return this.http.get<MeSearchResponse>(ApiRoutes.Profile.search, {
+      params: {
+        search: searchParam.trim()
+      }
+    }).pipe(
+      map(response => response.matched || []),
+      catchError(err => {
+        return of([])
+      })
+    )
   }
 }

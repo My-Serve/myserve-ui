@@ -61,7 +61,7 @@ export class GoogleCallbackComponent implements OnInit{
       next: value => {
         backendSpinner.release();
         if(!value){
-          this.toastService.error(EToastConstants.Error, 'Failed to validate your OTP')
+          this.toastService.error(EToastConstants.Error, 'Failed to authorize your login')
           return
         }
 

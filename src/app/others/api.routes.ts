@@ -13,6 +13,7 @@ export class ApiRoutes {
 
   public static Profile = {
     me: `${ApiRoutes.base}/me`,
+    search: `${ApiRoutes.base}/me/search`,
   }
 
   public static Files = {

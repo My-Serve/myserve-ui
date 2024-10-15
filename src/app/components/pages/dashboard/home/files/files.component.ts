@@ -20,7 +20,7 @@ import {ActiveTaskService} from "@services/active-task.service";
 import {TaskLabel} from "@constants/e-task-label";
 import {removeQueryParams} from "@utils/string.utils";
 import {HttpErrorResponse} from "@angular/common/http";
-import {filter, skip, skipWhile, Subscription} from "rxjs";
+import {filter, skip, Subscription} from "rxjs";
 import {DialogModule} from "primeng/dialog";
 import {FileItemComponent} from "@pages/dashboard/home/files/file-item/file-item.component";
 import {PopUpService} from "@services/pop-up.service";
@@ -88,6 +88,7 @@ export class FilesComponent implements OnInit, OnDestroy {
       this.listFiles();
     });
 
+
     const favouriteSub = this.fileService.updateFavourite.pipe(
       skip(1), // Skip the initial emission
       filter(x => typeof x !== 'undefined')
@@ -136,12 +137,38 @@ export class FilesComponent implements OnInit, OnDestroy {
         this.files = value.files
         this.parents = value.parents;
         listSpinner.release();
+        this.checkFragment();
       },
       error: err => {
         this.toastService.error(EToastConstants.LoadFailed, "Failed to list out your files, please try again later!")
         listSpinner.release();
       }
     })
+  }
+
+  checkFragment(){
+    try {
+      const fragment = this.route.snapshot.fragment;
+      if(!fragment){
+        return;
+      }
+
+      const urlWithoutFragment = this.router.url.split('#')[0];
+
+      // Navigate to the URL without the fragment
+      this.router.navigateByUrl(urlWithoutFragment, { replaceUrl: true });
+
+      const foundedFile = this.files.find(x => x.id === fragment);
+      if(!foundedFile){
+        this.toastService.error(EToastConstants.Error, "Failed to locate the selected file")
+        return
+      }
+
+      this.fileService.preview(foundedFile.id)
+    }catch (err){
+      console.error(err)
+      this.toastService.error(EToastConstants.Error, "An unknown error occurred while trying to open your content")
+    }
   }
 
   onFileDropped(event: FileList) {
