@@ -17,7 +17,6 @@ export interface IProfileCreateCommand {
   lastName: string,
   settings?: IProfileSettings,
   imageFile?: File | null
-  encryptionKey: string,
   contentType?: string | null,
 }
 

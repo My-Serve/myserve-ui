@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {ConfirmationService, PrimeIcons} from "primeng/api";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,9 @@ export class PopUpService {
     isFile: false,
   };
 
-  constructor() { }
+  constructor(
+    private readonly confirmationService: ConfirmationService
+  ) { }
 
   public get showCreatedEditPopupDirectory(): boolean {
     return this._createEditPopupDirectory.show;
@@ -51,5 +54,38 @@ export class PopUpService {
 
   get createEditPopupDirectory(): { show: boolean; existingName?: string; currentParent?: string; isFile: boolean, existingElementId?: string } {
     return this._createEditPopupDirectory;
+  }
+
+  confirm(message: string, header: string,
+          options?: {
+            icon?: PrimeIcons
+            acceptIcon?: string
+            rejectIcon?: string
+            acceptText?: string
+            noText?: string,
+            cb?: (status: boolean) => Promise<boolean>
+          }
+          ) : Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      this.confirmationService.confirm({
+        message: message,
+        header: header,
+        icon: options?.icon?.toString() ?? 'pi pi-info-circle',
+        acceptLabel: options?.acceptText ?? 'Yes',
+        rejectLabel: options?.noText ?? 'No',
+        accept: () => {
+          try {
+            options?.cb?.(true)
+          }catch (err){}
+          resolve(true);
+        },
+        reject: () => {
+          try {
+            options?.cb?.(false);
+          }catch (err){}
+          resolve(false);
+        }
+      })
+    });
   }
 }

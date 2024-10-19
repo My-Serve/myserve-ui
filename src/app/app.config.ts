@@ -5,7 +5,7 @@ import { routes } from './app.routes';
 import {AbstractStorageService} from "@services/abstracts/storage/abstract.storage.service";
 import {downloadFactory, storageFactory} from "@factory/abstract-provider-factory";
 import {provideHttpClient, withInterceptors} from "@angular/common/http";
-import {MessageService} from "primeng/api";
+import {ConfirmationService, MessageService} from "primeng/api";
 import {initialize} from "@factory/initializer";
 import {AuthService} from "@services/auth.service";
 import {httpInterceptor} from "@interceptor/http.interceptor";
@@ -40,5 +40,6 @@ export const appConfig: ApplicationConfig = {
     MessageService,
     NgxImageCompressService,
     provideAnimations(),
+    ConfirmationService,
   ]
 };

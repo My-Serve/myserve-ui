@@ -1,1 +1,20 @@
-<p>calendar works!</p>
+<div class="flex flex-col w-full max-h-fit" >
+  <div class="flex flex-col h-20 p-5 w-full">
+    <div class="flex flex-row gap-5 items-center text-3xl w-full">
+      <div>
+        <i class="fa-regular fa-folder-open text-4xl"></i>
+      </div>
+      <div>
+        <span style="font-family: Poppins, sans-serif" class="font-bold">My Calendar</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex w-full pe-0">
+    <p-divider class="w-full pe-0" />
+  </div>
+
+  <div class="w-full h-full max-h-fit overflow-auto">
+    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+  </div>
+</div>

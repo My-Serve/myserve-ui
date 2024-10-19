@@ -11,6 +11,10 @@ import {ProfileService} from "@services/profile.service";
 import {ToastService} from "@services/toast.service";
 import {EToastConstants} from "@constants/e-toast-constants";
 import {IProfileCreateCommand} from "@models/profile-model";
+import {PasswordModule} from "primeng/password";
+import {PopUpService} from "@services/pop-up.service";
+import {AbstractStorageService} from "@services/abstracts/storage/abstract.storage.service";
+import {StorageKeys} from "@others/storage/storage.keys";
 
 @Component({
   selector: 'app-profile',
@@ -22,6 +26,7 @@ import {IProfileCreateCommand} from "@models/profile-model";
     AvatarModule,
     TooltipModule,
     Button,
+    PasswordModule,
   ],
   templateUrl: './profile.component.html',
   styles: ``
@@ -35,7 +40,9 @@ export class ProfileComponent implements OnInit{
   constructor(
     protected readonly router: Router,
     protected readonly profileService: ProfileService,
-    protected readonly toastService: ToastService
+    protected readonly toastService: ToastService,
+    private readonly popupService: PopUpService,
+    private readonly storageService: AbstractStorageService
   ) {
     this.form = new FormGroup({
       profilePicture: new FormControl<string>('', []),
@@ -49,11 +56,20 @@ export class ProfileComponent implements OnInit{
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit()  {
     if(this.isEdit){
+      const encKey = await this.storageService.getOrDefaultStringAsync(StorageKeys.EncryptionKey, "")
       this.profileService.getProfile().subscribe({
         next: value => {
 
+          this.form.patchValue({
+            profilePicture: value?.profileImageUrl,
+            firstName: value?.firstName,
+            lastName: value?.lastName,
+            encKey: encKey
+          })
+          console.log(this.form.value)
+          this.form.get("encKey")?.disable();
         },
         error: async err => {
           await this.router.navigate(['profile']);
@@ -93,29 +109,47 @@ export class ProfileComponent implements OnInit{
     })
   }
 
-  save(){
+  async save(){
     if(this.form.invalid){
       this.toastService.error(EToastConstants.FormInvalid, "Please completely fill out the fields")
       return;
     }
 
+    const encKey = this.form.get('encKey')!.value;
+
     const body : IProfileCreateCommand = {
       firstName: this.form.get('firstName')!.value,
       lastName: this.form.get('lastName')!.value,
-      encryptionKey: this.form.get('encKey')!.value,
       settings: undefined,
       imageFile: this.selectedFile,
       contentType: this.selectedFile === null || typeof this.selectedFile === 'undefined' ? null : this.selectedFile.type
     }
 
-    this.profileService.create(body)
-      .subscribe({
-        next: value => {
-          console.log(value)
-        },
-        error: err => {
-          console.error(err)
-        }
-      })
+    const accepted = await this.popupService.confirm("The encryption key you provided should be used to encrypt all private and won't be stored in server. If lost, your data would be lost", "Note",
+      {
+        acceptText: 'I Understand',
+        noText: 'Reject'
+      }
+    );
+    if(!accepted)
+    {
+      this.toastService.warning(EToastConstants.Warning, "Please accept the encryption key notice!");
+      return
+    }
+
+    if(!this.isEdit){
+      this.profileService.create(body)
+        .subscribe({
+          next: value => {
+            this.form.reset();
+            this.storageService.setStringAsync(StorageKeys.EncryptionKey, encKey);
+          },
+          error: err => {
+            console.error(err)
+          }
+        })
+    }else{
+
+    }
   }
 }

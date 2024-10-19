@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
-import {BehaviorSubject, catchError, map, Observable, of, tap} from "rxjs";
+import {BehaviorSubject, catchError, from, map, Observable, of, switchMap, tap} from "rxjs";
 import {IListOptions} from "@others/models/list-options";
 import {ApiRoutes} from "@others/api.routes";
 import {
@@ -16,6 +16,7 @@ import {ActiveTaskService} from "./active-task.service";
 import {IOperation} from "@others/models/operations";
 import {EHeaderKeys, EHeaderValues} from "@constants/e-header-constants";
 import mime from 'mime/lite';
+import {PopUpService} from "@services/pop-up.service";
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,7 @@ export class FilesService {
   constructor(
     private readonly http: HttpClient,
     private readonly taskService: ActiveTaskService,
+    private readonly popupService: PopUpService
   ) { }
 
   list(parentId?: string, listOptions?: IListOptions): Observable<IListFilesResponse> {
@@ -158,24 +160,29 @@ export class FilesService {
     this._previewFile = false;
   }
 
-  public delete(id: string) : Observable<boolean> {
-    return this.http.delete(`${ApiRoutes.Files.delete}/${id}`)
-      .pipe(
-        map(_ => {
-          return true;
-        }),
-        catchError(err => {
-          if(err instanceof HttpErrorResponse){
-            if(err.status === 404){
-              console.error("The provided file doesn't exists")
-            }
-          }
-
+  public delete(id: string): Observable<boolean> {
+    return from(this.popupService.confirm("Are you sure you want to delete the file?", "Delete")).pipe(
+      switchMap(confirmed => {
+        if (!confirmed) {
           return of(false);
-        })
-      )
-  }
+        }
 
+        return this.http.delete(`${ApiRoutes.Files.delete}/${id}`).pipe(
+          map(() => true),
+          catchError(err => {
+            if (err instanceof HttpErrorResponse) {
+              if (err.status === 404) {
+                console.error("The provided file doesn't exist");
+              } else {
+                console.error("An error occurred:", err.message);
+              }
+            }
+            return of(false);
+          })
+        );
+      })
+    );
+  }
 
   get previewFile(): boolean {
     return this._previewFile;

@@ -26,13 +26,16 @@ export const routes: Routes = [
   },
   {
     path: 'profile',
-    canActivate: [authGuard],
-    title: 'Create Profile | My Serve',
-    loadComponent: () => import('./components/pages/dashboard/profile/profile.component').then(m => m.ProfileComponent),
     children: [
       {
-        path: 'edit',
+        path: '',
         canActivate: [authGuard],
+        title: 'Create Profile | My Serve',
+        loadComponent: () => import('./components/pages/dashboard/profile/profile.component').then(m => m.ProfileComponent),
+      },
+      {
+        path: 'edit',
+        canActivate: [authGuard, profileGuard],
         title: 'Edit Profile | My Serve',
         loadComponent: () => import('./components/pages/dashboard/profile/profile.component').then(m => m.ProfileComponent),
       },
@@ -51,7 +54,6 @@ export const routes: Routes = [
       {
         path: 'files',
         title: 'My Files | My Serve',
-        //loadComponent: () => import('./components/pages/dashboard/home/files/files.component').then(m => m.FilesComponent),
         children: [
           {
             path: '',
@@ -65,16 +67,16 @@ export const routes: Routes = [
           }
         ],
       },
-      {
-        path: 'notes',
-        title: 'My Notes | My Serve',
-        loadComponent: () => import('./components/pages/dashboard/home/notes/notes.component').then(m => m.NotesComponent),
-      },
-      {
-        path: 'passwords',
-        title: 'My Password | My Serve',
-        loadComponent: () => import('./components/pages/dashboard/home/password/password.component').then(m => m.PasswordComponent),
-      },
+      // {
+      //   path: 'notes',
+      //   title: 'My Notes | My Serve',
+      //   loadComponent: () => import('./components/pages/dashboard/home/notes/notes.component').then(m => m.NotesComponent),
+      // },
+      // {
+      //   path: 'passwords',
+      //   title: 'My Password | My Serve',
+      //   loadComponent: () => import('./components/pages/dashboard/home/password/password.component').then(m => m.PasswordComponent),
+      // },
       {
         path: '',
         redirectTo: 'calendar',

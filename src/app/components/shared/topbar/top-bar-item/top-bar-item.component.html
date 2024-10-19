@@ -21,7 +21,7 @@
           @if(entity().metadata["Type"] === EFileType.Directory){
             <span class="text-xs right-0.5 text-gray-500 pt-0.5 ml-2 flex-shrink-0"></span>
           } @else {
-            <span class="text-xs text-gray-500 pt-0.5 ml-2 flex-shrink-0"> {{entity().metadata["TargetSize"] ?? 0 | toNumber | storageSize}} </span>
+            <span class="text-xs text-gray-500 pt-0.5 ml-2 flex-shrink-0"> {{entity().metadata["TargetSize"] | toNumber | storageSize}} </span>
           }
         }
       }
